@@ -64,7 +64,7 @@ export function LoginView({ nextPath, devMode }: { nextPath: string; devMode: bo
       <PageTitle titleKey="auth.loginTitle" />
       <div className="w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
         <div className="mb-6 flex flex-col items-center text-center">
-          <Image src={COMPANY.logo_path} alt={COMPANY.name_en} width={150} height={100} priority className="h-24 w-auto" />
+          <Image src={COMPANY.logo_path} alt={COMPANY.name_en} width={288} height={80} priority className="h-20 w-auto" />
           <h1 className="mt-3 text-xl font-bold text-brand">{t("auth.loginTitle")}</h1>
           <p className="mt-1 text-sm text-slate-500">{t("auth.loginSubtitle")}</p>
         </div>

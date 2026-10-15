@@ -51,7 +51,7 @@ export const metadata: Metadata = {
   // Default tab title (English, the default UI language); <PageTitle> localizes it per page.
   title: `UPD Card System | ${COMPANY.name_en}`,
   description: `${COMPANY.name_en} — issuing and verifying Unique Under-run Protection Device (UPD) cards`,
-  icons: { icon: COMPANY.logo_path },
+  icons: { icon: COMPANY.logo_mark_path },
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {

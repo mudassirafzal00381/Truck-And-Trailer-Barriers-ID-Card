@@ -43,7 +43,7 @@ export function SiteHeader() {
     <header className="border-b border-brand/15 bg-white print:hidden">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3">
         <Link href={isAdmin ? "/" : pathname} className="flex items-center gap-3">
-          <Image src={COMPANY.logo_path} alt={COMPANY.name_en} width={72} height={48} priority className="h-12 w-auto" />
+          <Image src={COMPANY.logo_path} alt={COMPANY.name_en} width={173} height={48} priority className="h-12 w-auto" />
           <div className="leading-tight">
             {language === "en" ? (
               <div className="font-bold text-brand">{COMPANY.name_en}</div>

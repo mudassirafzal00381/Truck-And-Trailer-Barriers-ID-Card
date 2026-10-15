@@ -11,6 +11,10 @@ export const COMPANY = {
   country_of_origin_ar: "السعودية",
   country_of_origin_en: "Saudi Arabia",
   logo_path: "/logo.png",
+  // Square version (the triangle only), used as the browser tab icon.
+  logo_mark_path: "/logo-mark.png",
+  // Smaller copy printed on the card (keeps downloaded PDFs light).
+  logo_card_path: "/logo-card.png",
   // Not present in the reference PDF — fill in, e.g. ["+966 11 000 0000", "+966 50 000 0000"].
   contact_phones: [] as string[],
   // Public record page (what a scanned QR code opens): header name, footer contacts

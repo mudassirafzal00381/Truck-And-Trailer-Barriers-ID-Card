@@ -142,7 +142,7 @@ Connect the phone to the same Wi-Fi and create a new card. If Windows asks, allo
 | What | Where |
 |---|---|
 | Company details (names, code E30, country, logo, **phone numbers**) | [`src/config/company.ts`](src/config/company.ts), the single source of truth |
-| Logo | [`public/logo.png`](public/logo.png); `public/logo-card.png` is the smaller copy used on the card |
+| Logo | [`public/logo.png`](public/logo.png) (header, login, record page); `public/logo-card.png` is the smaller copy printed on the card; `public/logo-mark.png` (triangle only) is the browser tab icon |
 | Fixed bilingual card text (from the reference PDF) | [`src/config/card-template.ts`](src/config/card-template.ts) |
 | UI translations | [`src/i18n/en.json`](src/i18n/en.json), [`src/i18n/ar.json`](src/i18n/ar.json), [`src/i18n/ur.json`](src/i18n/ur.json); language list and default in [`src/i18n/languages.ts`](src/i18n/languages.ts) |
 | Language context + `t()` | [`src/i18n/LanguageProvider.tsx`](src/i18n/LanguageProvider.tsx) |
@@ -170,7 +170,7 @@ Connect the phone to the same Wi-Fi and create a new card. If Windows asks, allo
 - **Fonts:** Noto Sans for Latin text and Noto Sans Arabic for Arabic, the same fonts the reference uses.
 - **Accuracy:** printed output was measured against the reference. The median text-baseline error is about 0.2 pt for Latin and 0.6 pt for Arabic (1 pt ≈ 0.35 mm).
 - **Same in every UI language:** verified pixel for pixel.
-- **No logo on the card:** the printed/PDF card has no company logo.
+- **Logo on the card:** the SASO logo sits at the top right, between the title and the close box (`.logo` in the CSS module).
 - **PDF file name:** the number as printed on the card after "KSA E30", e.g. `S-R-F AAA 263290.pdf`. File names can't contain `/`, so it becomes `-`.
 - **Merged cells 8 and 9:** the reference draws them as one box, and the replica copies that. To separate them, remove the `joined`/`joinedLeft` classes.
 
@@ -184,7 +184,7 @@ Ways to get the card out:
 
 - **Card number:** every card gets a random **10-digit "Barrier Unique ID Card" number** (e.g. `3426822545`). The database guarantees it's unique. It's shown on the admin preview and in the admin list and search.
 - **Public record page (what the QR opens):** an Arabic-only page in the layout the client asked for:
-  - a header with a small square mark and the name "سجل هتان" (top-left), no company logo,
+  - a header with the SASO logo and the name "سجل هتان" (top-left),
   - a green company band showing the UPD manufacture date,
   - grey field boxes: distinguished number, **vehicle type**, VIN, brand, model, model year,
   - a light-grey contact footer.

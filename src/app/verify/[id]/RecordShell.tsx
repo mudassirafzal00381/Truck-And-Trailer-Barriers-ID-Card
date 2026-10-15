@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element -- small fixed logo; no need for next/image here */
 import { COMPANY } from "@/config/company";
 import s from "./RecordPage.module.css";
 
@@ -26,7 +27,7 @@ export const RECORD_TEXT = {
   retry: "إعادة المحاولة",
 } as const;
 
-/** Page frame: header (mark + name + titles), the given content, and the contact footer. */
+/** Page frame: header (logo + name + titles), the given content, and the contact footer. */
 export function RecordShell({ children, feedbackSubject }: { children: React.ReactNode; feedbackSubject?: string }) {
   const page = COMPANY.record_page;
   const subject = encodeURIComponent(`${RECORD_TEXT.feedback}${feedbackSubject ? ` — ${feedbackSubject}` : ""}`);
@@ -41,10 +42,7 @@ export function RecordShell({ children, feedbackSubject }: { children: React.Rea
       <div className={s.sheet} dir="rtl" lang="ar">
         <header className={s.header}>
           <div className={s.brand}>
-            <span className={s.mark} aria-hidden>
-              <i />
-              <b />
-            </span>
+            <img className={s.logo} src={COMPANY.logo_path} alt={COMPANY.name_en} />
             <span>{page.brand}</span>
           </div>
           <h1 className={s.title}>{RECORD_TEXT.title}</h1>

@@ -43,36 +43,11 @@
   font-size: 0.78rem;
 }
 
-/* Small square mark: a green "L" corner and a teal bar on a pale tile. */
-.mark {
-  position: relative;
+/* Organisation logo (wide wordmark + mark). */
+.logo {
   flex: none;
-  width: 31px;
-  height: 31px;
-  overflow: hidden;
-  border: 1px solid #d1e0de;
-  border-radius: 4px;
-  background: #f3f8f7;
-}
-
-.mark i {
-  position: absolute;
-  right: 4px;
-  bottom: 3px;
-  width: 19px;
-  height: 19px;
-  border: 6px solid #087d4a;
-  border-top-color: transparent;
-  border-right-color: transparent;
-}
-
-.mark b {
-  position: absolute;
-  right: 5px;
-  top: 4px;
-  width: 12px;
-  height: 7px;
-  background: #138ca2;
+  height: 46px;
+  width: auto;
 }
 
 .title {

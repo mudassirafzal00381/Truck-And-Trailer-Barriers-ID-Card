@@ -1,4 +1,6 @@
+/* eslint-disable @next/next/no-img-element -- a plain <img> keeps the logo exportable to PDF */
 import { CARD_TEXT } from "@/config/card-template";
+import { COMPANY } from "@/config/company";
 import { formatCardDate, type UpdCard as UpdCardRecord } from "@/lib/cards";
 import s from "./UpdCard.module.css";
 
@@ -85,6 +87,8 @@ export function UpdCard({ card, qrSvg, ref }: Props) {
       <div className={s.subtitle}>
         {CARD_TEXT.manufacturer_section_en} <span lang="ar">{CARD_TEXT.manufacturer_section_ar}</span>
       </div>
+
+      <img className={s.logo} src={COMPANY.logo_card_path} alt={COMPANY.name_en} />
 
       <svg className={s.close} viewBox="0 0 12 12" aria-hidden>
         <rect x="0.4" y="0.4" width="11.2" height="11.2" fill="#fff" stroke="#6b6b6b" strokeWidth="0.8" />
