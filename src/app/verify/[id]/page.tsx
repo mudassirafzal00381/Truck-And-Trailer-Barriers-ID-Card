@@ -2,17 +2,20 @@ import type { Metadata } from "next";
 import { COMPANY } from "@/config/company";
 import { getPublicCard } from "@/lib/public-cards";
 import { CardNotVerified } from "./CardNotVerified";
-import { recordLang } from "./RecordShell";
+import { RECORD_TEXT, recordLang } from "./RecordShell";
 import { VerifyView } from "./VerifyView";
 
-export const metadata: Metadata = {
-  title: `بطاقة الرقم المميز للحاجز | ${COMPANY.name_ar}`,
-  robots: { index: false, follow: false },
-};
+export async function generateMetadata({ searchParams }: PageProps<"/verify/[id]">): Promise<Metadata> {
+  const lang = recordLang((await searchParams).lang);
+  return {
+    title: `${RECORD_TEXT[lang].cardTitle} | ${lang === "ar" ? COMPANY.name_ar : COMPANY.name_en}`,
+    robots: { index: false, follow: false },
+  };
+}
 
 /**
  * Public verification page opened by scanning a card's QR code. No login.
- * Arabic by default; `?lang=en` shows it in English.
+ * English by default; `?lang=ar` (the header's language switch) shows it in Arabic.
  *
  * Reads through the same `getPublicCard()` used by GET /api/cards/[id] (shared
  * cache, public fields only) instead of calling the API over HTTP from the server.

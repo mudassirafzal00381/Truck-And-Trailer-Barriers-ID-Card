@@ -4,9 +4,9 @@ import s from "./RecordPage.module.css";
 
 export type RecordLang = "ar" | "en";
 
-/** `?lang=en` shows the page in English; anything else is Arabic (the default). */
+/** `?lang=ar` shows the page in Arabic; anything else is English (the default). */
 export function recordLang(value: unknown): RecordLang {
-  return value === "en" ? "en" : "ar";
+  return value === "ar" ? "ar" : "en";
 }
 
 /**
