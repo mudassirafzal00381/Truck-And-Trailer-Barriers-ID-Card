@@ -24,7 +24,9 @@ export type UpdCard = {
   created_at: string;
   created_by: string | null;
   qr_url: string;
-  /** Uploaded barrier pictures; null = show the default picture. */
+  /** Uploaded barrier pictures; null = show the default picture (front has none). */
+  /** Missing on rows from before migration 003. */
+  front_photo_url?: string | null;
   side_photo_url: string | null;
   rear_photo_url: string | null;
 };

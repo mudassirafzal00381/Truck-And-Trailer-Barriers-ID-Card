@@ -50,6 +50,8 @@ const inputClass = (invalid?: boolean) =>
     invalid ? "border-red-400" : "border-slate-300"
   }`;
 
+const NO_PHOTOS: Record<PhotoKind, File | null> = { front: null, side: null, rear: null };
+
 export function CardForm() {
   const { t } = useLanguage();
   const router = useRouter();
@@ -62,11 +64,11 @@ export function CardForm() {
   const [formMessage, setFormMessage] = useState<TranslationKey | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [sessionExpired, setSessionExpired] = useState(false);
-  const [photos, setPhotos] = useState<Record<PhotoKind, File | null>>({ side: null, rear: null });
+  const [photos, setPhotos] = useState<Record<PhotoKind, File | null>>(NO_PHOTOS);
   const [photoErrors, setPhotoErrors] = useState<Partial<Record<PhotoKind, CardErrorCode>>>({});
 
   const updType = buildUpdType(sides);
-  // Barrier pictures are switched off for now (FEATURES.barrierPhotos).
+  // One picture field per selected barrier (FEATURES.barrierPhotos switches them off).
   const photoKinds = FEATURES.barrierPhotos ? photoKindsFor(updType) : [];
   // Cheap to recompute; the React Compiler memoizes it anyway.
   const input: CardInput = normalizeCardInput({ ...values, upd_type: updType, under_run_number_suffix: serial.join("") });
@@ -91,7 +93,7 @@ export function CardForm() {
     setValues(initialValues());
     setSides(EMPTY_SIDES);
     setSerial(emptySerial());
-    setPhotos({ side: null, rear: null });
+    setPhotos(NO_PHOTOS);
     setPhotoErrors({});
     setServerErrors({});
     setShowErrors(false);

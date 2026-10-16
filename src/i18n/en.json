@@ -52,6 +52,7 @@
     "cellLabel": "Cell {n}",
     "yearPlaceholder": "e.g. 2023",
     "photosTitle": "Barrier pictures",
+    "frontPhoto": "Front barrier picture",
     "sidePhoto": "Side barrier picture",
     "rearPhoto": "Rear barrier picture",
     "choosePhoto": "Choose image",
@@ -59,8 +60,11 @@
     "useDefaultPhoto": "Use default image",
     "defaultPhotoNote": "No image chosen — the default picture will be shown.",
     "photoHint": "JPG, PNG or WEBP. Large photos are resized automatically.",
-    "photosNoneNote": "Select Side and/or Rear above to add barrier pictures.",
+    "photosNoneNote": "Select Front, Side and/or Rear above to add barrier pictures.",
     "defaultBadge": "Default",
+    "noPhoto": "No picture",
+    "noPhotoNote": "No image chosen — no front picture will be shown.",
+    "removePhoto": "Remove image",
     "vehicleType": "Vehicle type"
   },
   "messages": {

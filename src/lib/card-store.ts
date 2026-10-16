@@ -4,7 +4,10 @@ import path from "node:path";
 import type { UpdCard } from "./cards";
 import { getSupabaseAdmin } from "./supabase-server";
 
-export type NewCard = Omit<UpdCard, "created_at" | "created_by"> & { created_by?: string | null };
+export type NewCard = Omit<UpdCard, "created_at" | "created_by" | "front_photo_url"> & {
+  created_by?: string | null;
+  front_photo_url?: string | null;
+};
 export type InsertResult = { ok: true; card: UpdCard } | { ok: false; conflict: "id" | "number" | "card_number" };
 
 /** Persistence for UPD cards. Supabase in real use; a local JSON file as a dev-only fallback. */

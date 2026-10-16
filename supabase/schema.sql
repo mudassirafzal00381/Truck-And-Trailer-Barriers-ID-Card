@@ -41,7 +41,8 @@ create table if not exists public.upd_cards (
   qr_url                   text not null,
 
   -- Barrier pictures (public URLs in the barrier-photos bucket). NULL = show the
-  -- default picture configured in src/config/company.ts.
+  -- default picture configured in src/config/company.ts (front has none).
+  front_photo_url          text,
   side_photo_url           text,
   rear_photo_url           text
 );

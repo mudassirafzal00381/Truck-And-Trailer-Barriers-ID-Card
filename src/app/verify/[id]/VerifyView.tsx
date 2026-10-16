@@ -1,6 +1,8 @@
+/* eslint-disable @next/next/no-img-element -- uploaded pictures come from storage URLs; no next/image config needed */
+import { barrierPhoto, photoKindsFor } from "@/lib/barrier-photos";
 import { formatDisplayDate, type PublicCard } from "@/lib/cards";
 import { formatUnderRunNumberForDisplay } from "@/lib/under-run-number";
-import { CheckIcon, EyeIcon, Item, RECORD_TEXT, RecordShell, type RecordLang } from "./RecordShell";
+import { Item, RECORD_TEXT, RecordShell, type RecordLang } from "./RecordShell";
 import s from "./RecordPage.module.css";
 
 /**
@@ -15,9 +17,11 @@ export function VerifyView({ card, lang }: { card: PublicCard; lang: RecordLang 
     .map((letter) => t.deviceTypes[letter])
     .filter(Boolean)
     .join(t.listJoin);
-  const photos: { label: string; url: string }[] = [];
-  if (card.side_photo_url) photos.push({ label: t.sidePhoto, url: card.side_photo_url });
-  if (card.rear_photo_url) photos.push({ label: t.rearPhoto, url: card.rear_photo_url });
+  // One picture per selected barrier: the uploaded one, else the default (front has none).
+  const photos = photoKindsFor(card.upd_type).flatMap((kind) => {
+    const photo = barrierPhoto(card, kind);
+    return photo ? [{ kind, label: t.photos[kind], url: photo.url }] : [];
+  });
 
   return (
     <RecordShell lang={lang}>
@@ -60,29 +64,16 @@ export function VerifyView({ card, lang }: { card: PublicCard; lang: RecordLang 
           </Item>
         </div>
 
-        {photos.map(({ label, url }) => (
-          <div key={label} className={s.photo}>
-            <span className={s.photoLabel}>{label}</span>
-            <a className={s.photoRow} href={url} target="_blank" rel="noopener noreferrer">
-              <span className={s.photoCheck}>
-                <CheckIcon />
-              </span>
-              <span className={s.photoName} dir="ltr">
-                {fileName(url)}
-              </span>
-              <span className={s.photoView} title={t.viewPhoto}>
-                <EyeIcon />
-                <span className={s.srOnly}>{t.viewPhoto}</span>
-              </span>
+        {photos.map(({ kind, label, url }) => (
+          <figure key={kind} className={s.photo}>
+            <figcaption className={s.photoLabel}>{label}</figcaption>
+            <a href={url} target="_blank" rel="noopener noreferrer" title={t.viewPhoto}>
+              <img className={s.photoImage} src={url} alt={label} loading="lazy" />
             </a>
-          </div>
+          </figure>
         ))}
       </section>
     </RecordShell>
   );
 }
 
-/** Last path segment of a picture URL, e.g. ".../side-1a2b.jpg" → "side-1a2b.jpg". */
-function fileName(url: string): string {
-  return decodeURIComponent(new URL(url, "http://x").pathname.split("/").pop() || url);
-}

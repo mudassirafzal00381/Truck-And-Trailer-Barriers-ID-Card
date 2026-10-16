@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
   const admin = await getAdmin();
   if (!admin) return fail("UNAUTHORIZED", 401);
 
-  // multipart/form-data: a "card" JSON field plus optional "side_photo" / "rear_photo"
+  // multipart/form-data: a "card" JSON field plus optional "front_photo" / "side_photo" / "rear_photo"
   // files. Plain JSON (no pictures) is accepted too.
   let body: Record<string, unknown>;
   const photos: Partial<Record<PhotoKind, File>> = {};
@@ -102,6 +102,9 @@ export async function POST(request: NextRequest) {
         under_run_number_prefix: number.prefix,
         under_run_number_suffix: number.suffix,
         qr_url: qrUrl,
+        // Sent only when there is a front picture, so issuing cards keeps working on
+        // a database that hasn't run supabase/migrations/003_front_photo.sql yet.
+        ...(stored.urls.front ? { front_photo_url: stored.urls.front } : {}),
         side_photo_url: stored.urls.side ?? null,
         rear_photo_url: stored.urls.rear ?? null,
         created_by: admin.email,

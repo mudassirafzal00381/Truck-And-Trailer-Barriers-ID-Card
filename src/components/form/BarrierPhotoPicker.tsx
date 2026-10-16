@@ -2,11 +2,13 @@
 
 /* eslint-disable @next/next/no-img-element -- local previews (blob: URLs) and static SVG defaults */
 import { useEffect, useId, useMemo, useRef, useState } from "react";
-import { COMPANY } from "@/config/company";
 import { useLanguage } from "@/i18n/LanguageProvider";
-import type { PhotoKind } from "@/lib/barrier-photos";
+import { defaultBarrierPhoto, type PhotoKind } from "@/lib/barrier-photos";
 import { resizePhoto } from "@/lib/image-resize";
 import { Spinner } from "@/components/Spinner";
+
+/** Form label per picture; also used on the admin preview. */
+export const PHOTO_LABEL_KEYS = { front: "form.frontPhoto", side: "form.sidePhoto", rear: "form.rearPhoto" } as const;
 
 type Props = {
   kind: PhotoKind;
@@ -15,7 +17,7 @@ type Props = {
   error?: string | null;
 };
 
-/** Pick a barrier picture for one side; without one, the default picture is used. */
+/** Pick a barrier picture for one barrier; without one, the default picture (if any) is used. */
 export function BarrierPhotoPicker({ kind, file, onChange, error }: Props) {
   const { t } = useLanguage();
   const inputId = useId();
@@ -41,8 +43,9 @@ export function BarrierPhotoPicker({ kind, file, onChange, error }: Props) {
     setBusy(false);
   }
 
-  const label = kind === "side" ? t("form.sidePhoto") : t("form.rearPhoto");
-  const shown = preview ?? COMPANY.default_barrier_photos[kind];
+  const label = t(PHOTO_LABEL_KEYS[kind]);
+  const fallback = defaultBarrierPhoto(kind);
+  const shown = preview ?? fallback;
 
   return (
     <div>
@@ -51,15 +54,19 @@ export function BarrierPhotoPicker({ kind, file, onChange, error }: Props) {
       </label>
       <div className={`flex gap-3 rounded-lg border p-3 ${error || readError ? "border-red-400" : "border-slate-200"} bg-slate-50`}>
         <div className="relative h-24 w-32 shrink-0 overflow-hidden rounded-md border border-slate-200 bg-white">
-          <img src={shown} alt={label} className="h-full w-full object-cover" />
-          {!file && (
+          {shown ? (
+            <img src={shown} alt={label} className="h-full w-full object-cover" />
+          ) : (
+            <span className="flex h-full items-center justify-center px-2 text-center text-xs text-slate-400">{t("form.noPhoto")}</span>
+          )}
+          {!file && fallback && (
             <span className="absolute start-1 top-1 rounded bg-slate-800/75 px-1.5 py-0.5 text-[10px] font-semibold text-white">
               {t("form.defaultBadge")}
             </span>
           )}
         </div>
         <div className="flex min-w-0 flex-col justify-center gap-2">
-          <p className="text-xs text-slate-500">{file ? <span dir="ltr">{file.name}</span> : t("form.defaultPhotoNote")}</p>
+          <p className="text-xs text-slate-500">{file ? <span dir="ltr">{file.name}</span> : t(fallback ? "form.defaultPhotoNote" : "form.noPhotoNote")}</p>
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
@@ -76,7 +83,7 @@ export function BarrierPhotoPicker({ kind, file, onChange, error }: Props) {
                 onClick={() => onChange(null)}
                 className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-600 hover:border-red-400 hover:text-red-600"
               >
-                {t("form.useDefaultPhoto")}
+                {t(fallback ? "form.useDefaultPhoto" : "form.removePhoto")}
               </button>
             )}
           </div>

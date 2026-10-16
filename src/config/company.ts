@@ -35,19 +35,20 @@ export const COMPANY = {
     phone: "+966 00 000 0000",
     email: "info@example.com",
   },
-  // Shown when a card has no uploaded barrier picture. Replace these files (or
-  // point to your own photos in /public) to change the default pictures.
+  // Shown on the QR page when a card has no uploaded side / rear picture. Replace
+  // these files (or point to your own photos in /public) to change them.
+  // There is no default front picture: it is shown only when one was uploaded.
   default_barrier_photos: {
-    side: "/barriers/side-default.svg",
-    rear: "/barriers/rear-default.svg",
+    side: "/barriers/side-default.webp",
+    rear: "/barriers/rear-default.webp",
   },
 } as const;
 
 /** Switches for features that are built but turned off for now. */
 export const FEATURES = {
-  // Side/rear barrier picture uploads in the new-card form (and their display on
-  // the admin preview). Set to true to bring them back; the database already supports them.
-  barrierPhotos: false,
+  // Front/side/rear barrier picture uploads in the new-card form, shown on the
+  // admin preview and the QR page. Needs supabase/migrations/003_front_photo.sql.
+  barrierPhotos: true,
 } as const;
 
 export type CompanyConfig = typeof COMPANY;

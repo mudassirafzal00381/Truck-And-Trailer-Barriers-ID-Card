@@ -217,70 +217,24 @@
 /* ---------- barrier pictures ---------- */
 
 .photo {
-  margin-top: 1.6rem;
+  margin: 1.6rem 0 0;
 }
 
 .photoLabel {
   display: block;
-  margin-bottom: 0.45rem;
+  margin-bottom: 0.5rem;
   font-size: 0.9rem;
   font-weight: 600;
 }
 
-.photoRow {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.6rem 0.85rem;
+.photoImage {
+  display: block;
+  width: 100%;
+  max-height: 420px;
+  object-fit: contain;
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: 10px;
   background: #f3f4f6;
-  color: var(--text);
-  text-decoration: none;
-}
-
-.photoRow:hover {
-  background: #eceef1;
-}
-
-.photoCheck {
-  display: flex;
-  flex: none;
-  color: #0f7a4a;
-}
-
-.photoCheck svg,
-.photoView svg {
-  width: 20px;
-  height: 20px;
-}
-
-.photoName {
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  text-align: start;
-}
-
-[dir="rtl"] .photoName {
-  text-align: right;
-}
-
-.photoView {
-  display: flex;
-  flex: none;
-  color: var(--muted);
-}
-
-.srOnly {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
 }
 
 /* ---------- footer ---------- */

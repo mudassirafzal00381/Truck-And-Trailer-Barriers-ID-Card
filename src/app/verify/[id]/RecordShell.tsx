@@ -32,8 +32,7 @@ export const RECORD_TEXT = {
     madeOn: "تاريخ صنع الحاجز",
     serial: "الرقم التسلسلي للحاجز",
     uniqueNo: "الرقم المميز للحاجز",
-    sidePhoto: "صورة الحاجز الجانبي",
-    rearPhoto: "صورة الحاجز الخلفي",
+    photos: { front: "صورة الحاجز الأمامي", side: "صورة الحاجز الجانبي", rear: "صورة الحاجز الخلفي" },
     viewPhoto: "عرض الصورة",
     deviceTypes: { F: "حاجز أمامي", S: "حاجز جانبي", R: "حاجز خلفي" } as Record<string, string>,
     listJoin: "، ",
@@ -66,8 +65,7 @@ export const RECORD_TEXT = {
     madeOn: "Date of UPD Manufacture",
     serial: "UPD Serial Number",
     uniqueNo: "UPD Unique Number",
-    sidePhoto: "Side Barrier Picture",
-    rearPhoto: "Rear Barrier Picture",
+    photos: { front: "Front Barrier Picture", side: "Side Barrier Picture", rear: "Rear Barrier Picture" },
     viewPhoto: "View picture",
     deviceTypes: { F: "Front Barrier", S: "Side Barrier", R: "Rear Barrier" } as Record<string, string>,
     listJoin: ", ",
@@ -160,24 +158,6 @@ function GlobeIcon() {
     <svg {...iconProps}>
       <circle cx="12" cy="12" r="9" />
       <path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3Z" />
-    </svg>
-  );
-}
-
-export function CheckIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden>
-      <circle cx="12" cy="12" r="11" fill="currentColor" />
-      <path d="m7 12.4 3.2 3.2L17 8.8" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-export function EyeIcon() {
-  return (
-    <svg {...iconProps}>
-      <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z" />
-      <circle cx="12" cy="12" r="3" />
     </svg>
   );
 }

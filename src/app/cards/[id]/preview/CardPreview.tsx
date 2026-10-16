@@ -12,6 +12,7 @@ import { UpdCard } from "@/components/card/UpdCard";
 import { useLanguage, type TranslationKey } from "@/i18n/LanguageProvider";
 import { FEATURES } from "@/config/company";
 import { barrierPhoto, photoKindsFor } from "@/lib/barrier-photos";
+import { PHOTO_LABEL_KEYS } from "@/components/form/BarrierPhotoPicker";
 import { copyText, downloadCardPdf } from "@/lib/card-pdf";
 import type { UpdCard as UpdCardRecord } from "@/lib/cards";
 
@@ -121,7 +122,8 @@ export function CardPreview({ card, qrSvg, justCreated }: Props) {
           <div className="grid gap-3 sm:grid-cols-2">
             {photoKindsFor(card.upd_type).map((kind) => {
               const photo = barrierPhoto(card, kind);
-              const label = kind === "side" ? t("form.sidePhoto") : t("form.rearPhoto");
+              if (!photo) return null;
+              const label = t(PHOTO_LABEL_KEYS[kind]);
               return (
                 <figure key={kind} className="rounded-xl border border-slate-200 bg-white p-3 shadow-sm">
                   <figcaption className="mb-2 flex items-center justify-between text-sm font-semibold text-slate-700">
