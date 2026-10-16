@@ -5,14 +5,12 @@
  * itself draw the text (via SVG foreignObject). That keeps Arabic letter-joining
  * and bidi ordering correct — html2canvas and @react-pdf don't shape Arabic reliably.
  */
-import { pdfFileBaseName } from "./under-run-number";
-
 const PAGE_WIDTH_PT = 595; // A4 portrait, same as the reference PDF
 const PAGE_HEIGHT_PT = 842;
 
-/** Downloads the rendered card element as a one-page PDF, e.g. "S-R-F AAA 263290.pdf". */
-export async function downloadCardPdf(cardEl: HTMLElement, card: { upd_type: string; under_run_number_suffix: string; under_run_number_full: string }) {
-  const fileName = `${pdfFileBaseName(card.upd_type, card.under_run_number_suffix)}.pdf`;
+/** Downloads the rendered card element as a one-page PDF named after the card number, e.g. "2084041007.pdf". */
+export async function downloadCardPdf(cardEl: HTMLElement, card: { card_number: string; under_run_number_full: string }) {
+  const fileName = `${card.card_number}.pdf`;
   const title = `UPD Card ${card.under_run_number_full}`;
   const [{ toPng }, { jsPDF }] = await Promise.all([import("html-to-image"), import("jspdf")]);
   await document.fonts.ready;
