@@ -1,9 +1,21 @@
-/* eslint-disable @next/next/no-img-element -- uploaded pictures come from storage URLs; no next/image config needed */
+import { createHash } from "node:crypto";
 import { barrierPhoto, photoKindsFor } from "@/lib/barrier-photos";
 import { formatDisplayDate, type PublicCard } from "@/lib/cards";
 import { formatUnderRunNumberForDisplay } from "@/lib/under-run-number";
+import { PhotoField } from "./PhotoField";
 import { Item, RECORD_TEXT, RecordShell, type RecordLang } from "./RecordShell";
 import s from "./RecordPage.module.css";
+
+/**
+ * File name shown for a picture, e.g. "f16ad42a739c4dd08023.jpg": stored files are all
+ * called front/side/rear, so the name is a short hash of the URL (stable per picture).
+ */
+function photoFileName(url: string): string {
+  const ext = url.startsWith("data:")
+    ? (url.match(/^data:image\/(\w+)/)?.[1] ?? "jpg").replace("jpeg", "jpg")
+    : (url.split(/[?#]/)[0].match(/\.(\w+)$/)?.[1] ?? "jpg");
+  return `${createHash("sha1").update(url).digest("hex").slice(0, 20)}.${ext}`;
+}
 
 /**
  * Public record page for a genuine card: a summary panel (card number, company,
@@ -65,12 +77,7 @@ export function VerifyView({ card, lang }: { card: PublicCard; lang: RecordLang 
         </div>
 
         {photos.map(({ kind, label, url }) => (
-          <figure key={kind} className={s.photo}>
-            <figcaption className={s.photoLabel}>{label}</figcaption>
-            <a href={url} target="_blank" rel="noopener noreferrer" title={t.viewPhoto}>
-              <img className={s.photoImage} src={url} alt={label} loading="lazy" />
-            </a>
-          </figure>
+          <PhotoField key={kind} label={label} fileName={photoFileName(url)} url={url} viewLabel={t.viewPhoto} closeLabel={t.close} />
         ))}
       </section>
     </RecordShell>
