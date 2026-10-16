@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cairo, Inter, JetBrains_Mono, Noto_Nastaliq_Urdu, Noto_Sans, Noto_Sans_Arabic, Tajawal } from "next/font/google";
+import { Cairo, IBM_Plex_Sans_Arabic, Noto_Nastaliq_Urdu, Noto_Sans, Noto_Sans_Arabic } from "next/font/google";
 import { cookies } from "next/headers";
 import { COMPANY } from "@/config/company";
 import { LanguageProvider } from "@/i18n/LanguageProvider";
@@ -26,24 +26,12 @@ const notoNastaliqUrdu = Noto_Nastaliq_Urdu({
   subsets: ["arabic"],
 });
 
-// Fonts of the public record page (/verify), matching the client's reference page.
-// Not preloaded: only that page uses them.
-const tajawal = Tajawal({
-  variable: "--font-tajawal",
+// Font of the public record page (/verify): Arabic and Latin in one family.
+// Not preloaded: only that page uses it.
+const plexArabic = IBM_Plex_Sans_Arabic({
+  variable: "--font-record",
   subsets: ["arabic", "latin"],
-  weight: ["500", "700", "800"],
-  preload: false,
-});
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  preload: false,
-});
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jbmono",
-  subsets: ["latin"],
-  weight: ["500", "600"],
+  weight: ["400", "500", "600"],
   preload: false,
 });
 
@@ -74,7 +62,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       lang={language}
       dir={directionOf(language)}
       suppressHydrationWarning
-      className={`${notoSans.variable} ${notoSansArabic.variable} ${notoNastaliqUrdu.variable} ${tajawal.variable} ${inter.variable} ${jetbrainsMono.variable} ${cairo.variable} h-full antialiased`}
+      className={`${notoSans.variable} ${notoSansArabic.variable} ${notoNastaliqUrdu.variable} ${plexArabic.variable} ${cairo.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
         <LanguageProvider initialLanguage={language}>

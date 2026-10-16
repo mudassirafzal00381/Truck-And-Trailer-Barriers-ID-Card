@@ -1,333 +1,377 @@
 /*
- * Public record page (what a scanned QR code opens). Replicates the client's
- * reference page: white header with a teal top rule, green company band, grey
- * rounded field boxes with teal labels, and a light-grey contact footer.
- * Values follow the reference stylesheet; desktop first, compact below 640px.
+ * Public record page (what a scanned QR code opens), in the company's own
+ * colours: white header with the company logo and names, white rounded panels
+ * with soft shadows, labels above bold values, and a navy footer.
  */
 
 .page {
-  flex: 1;
-  width: 100%;
-  background: #edf3f1;
-  padding: 2.5rem 1rem;
-  font-family: var(--font-tajawal), var(--font-arabic), sans-serif;
-}
+  --navy: #1f3a7a;
+  --text: #212529;
+  --muted: #5b6270;
+  --line: #e6e8ec;
 
-.sheet {
-  max-width: 760px;
-  margin: 0 auto;
-  overflow: hidden;
-  border-radius: 18px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
   background: #fff;
-  color: #1a1a1a;
-  box-shadow: 0 22px 55px rgba(22, 58, 52, 0.16);
+  color: var(--text);
+  font-family: var(--font-record), var(--font-arabic), system-ui, sans-serif;
 }
 
 /* ---------- header ---------- */
 
 .header {
-  padding: 1.4rem 1.8rem 1rem;
-  border-top: 5px solid #097b91;
+  border-bottom: 1px solid var(--line);
   background: #fff;
-  color: #192323;
-  text-align: right;
+}
+
+.headerInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: 1032px;
+  margin: 0 auto;
+  padding: 0.85rem 1.5rem;
 }
 
 .brand {
   display: flex;
   align-items: center;
-  justify-content: flex-end; /* = left, the sheet is RTL (as in the reference) */
-  gap: 0.5rem;
-  color: #175b63;
-  font-weight: 800;
-  font-size: 0.78rem;
+  gap: 0.75rem;
+  min-width: 0;
 }
 
 /* The client's logo (COMPANY.card_logo_path). */
 .logo {
   flex: none;
-  height: 40px;
+  height: 46px;
   width: auto;
 }
 
-.title {
-  margin: 0.65rem 0 0.25rem;
-  font-size: 1.52rem;
-  font-weight: 700;
-  line-height: 1.2;
+.brandNames {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
 }
 
-.subtitle {
-  margin: 0;
-  font-weight: 700;
-  font-size: 0.98rem;
-  line-height: 1.45;
+.brandNames strong {
+  color: var(--navy);
+  font-size: 1.05rem;
+  font-weight: 600;
 }
 
-/* ---------- green company band ---------- */
-
-.band {
-  margin: 1rem 1.8rem 1.35rem;
-  padding: 1rem 1.15rem;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #00833e, #00a33d);
-  box-shadow: 0 5px 14px rgba(0, 115, 50, 0.18);
-  color: #fff;
-  text-align: right;
+.brandNames span {
+  color: var(--muted);
+  font-size: 0.82rem;
 }
 
-.band strong {
-  display: block;
-  font-size: 1.25rem;
-  font-weight: 700;
+.langSwitch {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--navy);
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
 }
 
-.band span {
-  display: inline-block;
-  margin-top: 0.65rem;
-  padding: 0.35rem 0.7rem;
-  border-radius: 7px;
-  background: rgba(255, 255, 255, 0.92);
-  color: #222;
-  font-size: 0.8rem;
+.langSwitch svg {
+  width: 20px;
+  height: 20px;
 }
 
-.band b {
-  margin-right: 0.3rem;
-  direction: ltr;
-  unicode-bidi: embed;
+.langSwitch:hover {
+  text-decoration: underline;
 }
 
-/* Red / amber variants for "not verified" and "try again". */
-.bandDanger {
-  background: linear-gradient(135deg, #b42318, #d92d20);
-  box-shadow: 0 5px 14px rgba(180, 35, 24, 0.2);
-}
+/* ---------- panels ---------- */
 
-.bandWarning {
-  background: linear-gradient(135deg, #b54708, #dc6803);
-  box-shadow: 0 5px 14px rgba(181, 71, 8, 0.2);
-}
-
-.band p {
-  margin: 0.55rem 0 0;
-  font-size: 0.92rem;
-  line-height: 1.6;
-}
-
-.bandButton {
-  margin-top: 0.8rem;
-  border: 0;
-  border-radius: 7px;
-  padding: 0.45rem 0.9rem;
-  background: rgba(255, 255, 255, 0.95);
-  color: #222;
-  font: inherit;
-  font-size: 0.85rem;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-/* ---------- fields ---------- */
-
-.fields {
-  display: grid;
-  gap: 0.88rem;
-  padding: 0 1.8rem 1.5rem;
-}
-
-.field {
-  text-align: right;
-}
-
-.field label,
-.fieldLabel {
-  display: block;
-  margin: 0 0 0.3rem;
-  color: #4e8884;
-  font-size: 1rem;
-  font-weight: 700;
-}
-
-.field output {
-  display: block;
+.main {
+  flex: 1;
   width: 100%;
-  min-height: 55px;
-  padding: 0.95rem 1rem;
-  border: 1px solid #e1e1e1;
-  border-radius: 9px;
-  background: #f7f7f7;
-  color: #222;
-  /* Values use Inter (Latin) like the reference; Arabic falls back to Noto Sans Arabic. */
-  font-family: var(--font-inter), var(--font-arabic), sans-serif;
-  font-size: 1rem;
-  text-align: right;
+  max-width: 1032px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 2rem;
+}
+
+.panel {
+  margin: 0 0 1.5rem;
+  padding: 1.5rem;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+}
+
+.cardNumber {
+  margin: 0 0 0.35rem;
+  font-size: 1.9rem;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+}
+
+.cardTitle {
+  margin: 0 0 1.5rem;
+  color: var(--muted);
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.4rem 1.5rem;
+}
+
+.panelTitle {
+  margin: 0 0 1.25rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid var(--line);
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.dataGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.15rem 1.5rem;
+}
+
+.item {
+  min-width: 0;
+}
+
+.label {
+  display: block;
+  margin-bottom: 0.3rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.value {
+  display: block;
+  font-weight: 600;
   overflow-wrap: anywhere;
 }
 
-.field output.mono {
-  direction: ltr;
-  unicode-bidi: embed;
+/* Keeps LTR values (dates, VIN, numbers) on the reading edge in the Arabic layout. */
+.value[dir="ltr"] {
+  text-align: start;
+}
+
+[dir="rtl"] .value[dir="ltr"] {
   text-align: right;
-  font-family: var(--font-jbmono), monospace;
-  font-size: 0.88rem;
-  letter-spacing: 0.02em;
 }
 
-/* ---------- footer: light grey with dark navy bars at the bottom ---------- */
+/* ---------- status badges ---------- */
 
-.footer {
-  padding: 1.4rem 1.8rem 1.2rem;
-  border-top: 2px solid #c4c2bc;
-  background: #dedcd7;
-  color: #555450;
-}
-
-.contacts {
-  display: grid;
-  gap: 0.55rem;
-  max-width: 270px;
-  margin-inline: auto;
-  padding: 0;
-  list-style: none;
+.badge {
+  display: inline-block;
+  padding: 0.2rem 0.7rem;
+  border-radius: 999px;
   font-size: 0.95rem;
+  font-weight: 500;
 }
 
-.contacts li {
+.badgeValid {
+  background: #ecfdf3;
+  color: #085d3a;
+}
+
+.badgeDanger {
+  background: #fef3f2;
+  color: #b42318;
+}
+
+.badgeWarning {
+  background: #fffaeb;
+  color: #b54708;
+}
+
+.alertTitle {
+  margin: 0.85rem 0 0.4rem;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.alertText {
+  margin: 0;
+  max-width: 60ch;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.button {
+  margin-top: 1.1rem;
+  border: 1px solid var(--navy);
+  border-radius: 8px;
+  padding: 0.5rem 1.1rem;
+  background: var(--navy);
+  color: #fff;
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* ---------- barrier pictures ---------- */
+
+.photo {
+  margin-top: 1.6rem;
+}
+
+.photoLabel {
+  display: block;
+  margin-bottom: 0.45rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.photoRow {
   display: flex;
   align-items: center;
-  gap: 0.7rem;
-  letter-spacing: 0.045em;
+  gap: 0.6rem;
+  padding: 0.6rem 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #f3f4f6;
+  color: var(--text);
+  text-decoration: none;
 }
 
-.contacts a {
+.photoRow:hover {
+  background: #eceef1;
+}
+
+.photoCheck {
+  display: flex;
+  flex: none;
+  color: #0f7a4a;
+}
+
+.photoCheck svg,
+.photoView svg {
+  width: 20px;
+  height: 20px;
+}
+
+.photoName {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: start;
+}
+
+[dir="rtl"] .photoName {
+  text-align: right;
+}
+
+.photoView {
+  display: flex;
+  flex: none;
+  color: var(--muted);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- footer ---------- */
+
+.footer {
+  background: var(--navy);
+  color: #fff;
+}
+
+.footerInner {
+  max-width: 1032px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 1.5rem;
+}
+
+.footerCol {
+  max-width: 300px;
+}
+
+.footerCol h2 {
+  margin: 0 0 0.75rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.footerCol ul {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.footerCol a {
   color: inherit;
   text-decoration: none;
 }
 
-.contacts bdi {
-  direction: ltr;
-  unicode-bidi: embed;
+.footerCol a:hover {
+  text-decoration: underline;
 }
 
-/* A value that wraps (the long email) fills the row and reads left-aligned, as in the reference. */
-.contacts li > a,
-.contacts li > bdi {
-  text-align: left;
+.copyright {
+  margin: 1.75rem 0 0;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.9rem;
 }
 
-.icon {
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 29px;
-  height: 29px;
-  border-radius: 50%;
-  background: #06375e;
-  box-shadow: inset 0 0 0 2px rgba(119, 206, 248, 0.18);
-  color: inherit; /* muted glyph on the navy circle, as in the reference */
-}
-
-.icon svg {
-  width: 14px;
-  height: 14px;
-}
-
-.action {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  width: 100%;
-  margin-top: 1rem;
-  border: 1px solid #275578;
-  border-radius: 4px;
-  padding: 0.7rem;
-  background: linear-gradient(180deg, #143a60, #061b33);
-  box-shadow: inset 0 1px rgba(255, 255, 255, 0.2);
+.copyright strong {
   color: #fff;
-  font: inherit;
-  font-size: 1rem;
-  font-weight: 800;
-  text-decoration: none;
 }
 
-.action svg {
-  width: 16px;
-  height: 16px;
+/* ---------- smaller screens ---------- */
+
+@media (max-width: 760px) {
+  .summaryGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
-.legal {
-  margin: 0.75rem -1.2rem 0; /* a little wider than the content, as in the reference */
-  padding: 0.7rem 1rem 0.35rem;
-  border-top: 1px solid rgba(116, 208, 255, 0.4);
-  background: #06223e;
-  text-align: center;
-  font-size: 0.73rem;
-  font-weight: 700;
-}
-
-.bottom {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.65rem;
-  padding: 0.7rem 0 0.8rem; /* same width as the content, grey around it */
-  background: #06223e;
-  color: #d7edf9;
-  font-size: 0.75rem;
-}
-
-.divider {
-  color: #57c8ef;
-}
-
-/* ---------- phones: full-bleed sheet, compact spacing ---------- */
-
-@media (max-width: 640px) {
-  .page {
-    padding: 0;
+@media (max-width: 560px) {
+  .headerInner {
+    padding: 0.7rem 1rem;
   }
-  .sheet {
-    border-radius: 0;
-    box-shadow: none;
+  .logo {
+    height: 38px;
   }
-  .header {
-    padding: 1.1rem 1.15rem 0.85rem;
+  .brandNames strong {
+    font-size: 0.95rem;
   }
-  .title {
-    font-size: 1.3rem;
+  .brandNames span {
+    font-size: 0.75rem;
   }
-  .subtitle {
-    font-size: 0.88rem;
+  .main {
+    padding: 1.25rem 1rem 1rem;
   }
-  .band {
-    margin: 0.75rem 1rem 1rem;
-    padding: 0.85rem 0.9rem;
+  .panel {
+    padding: 1.15rem;
+    border-radius: 14px;
   }
-  .band strong {
-    font-size: 1.08rem;
+  .cardNumber {
+    font-size: 1.6rem;
   }
-  .fields {
-    gap: 0.78rem;
-    padding: 0 1rem 1.1rem;
+  .summaryGrid,
+  .dataGrid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
   }
-  .field label,
-  .fieldLabel {
-    font-size: 0.9rem;
-  }
-  .field output {
-    min-height: 49px;
-    padding: 0.78rem 0.85rem;
-    font-size: 0.92rem;
-  }
-  .footer {
-    padding: 1.1rem 1rem 0;
-  }
-  .contacts {
-    font-size: 0.88rem;
-  }
-  .legal {
-    margin-inline: -1rem;
+  .footerInner {
+    padding: 1.5rem 1rem 1.25rem;
   }
 }

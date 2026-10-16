@@ -28,17 +28,12 @@ export const COMPANY = {
     website: "",
     email: "info@example.com",
   },
-  // Public record page (what a scanned QR code opens): header name, footer contacts
-  // and footer texts, as in the client's reference page. Empty contact = row hidden.
-  // ⚠ The contact details below are the placeholders from the reference page —
-  //   replace them with real ones before handing cards to customers.
+  // Public record page (what a scanned QR code opens): contacts in its footer.
+  // Empty value = row hidden.
+  // ⚠ Placeholders — replace them with real ones before handing cards to customers.
   record_page: {
-    brand: "سجل هتان",
-    brand_en: "Hattan Registry",
-    legal: "© سجل هتان التجريبي",
     phone: "+966 00 000 0000",
-    fax: "+966 00 000 0001",
-    email: "support@hattan-registry.example",
+    email: "info@example.com",
   },
   // Shown when a card has no uploaded barrier picture. Replace these files (or
   // point to your own photos in /public) to change the default pictures.

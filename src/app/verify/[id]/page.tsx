@@ -2,16 +2,17 @@ import type { Metadata } from "next";
 import { COMPANY } from "@/config/company";
 import { getPublicCard } from "@/lib/public-cards";
 import { CardNotVerified } from "./CardNotVerified";
+import { recordLang } from "./RecordShell";
 import { VerifyView } from "./VerifyView";
 
 export const metadata: Metadata = {
-  // The record page is Arabic-only, like the client's reference page.
   title: `بطاقة الرقم المميز للحاجز | ${COMPANY.name_ar}`,
   robots: { index: false, follow: false },
 };
 
 /**
  * Public verification page opened by scanning a card's QR code. No login.
+ * Arabic by default; `?lang=en` shows it in English.
  *
  * Reads through the same `getPublicCard()` used by GET /api/cards/[id] (shared
  * cache, public fields only) instead of calling the API over HTTP from the server.
@@ -24,10 +25,11 @@ export const metadata: Metadata = {
  * production builds, so it isn't used. There's also deliberately no loading.tsx:
  * streaming would deliver the verdict via JavaScript too.) The page is noindex.
  */
-export default async function VerifyPage({ params }: PageProps<"/verify/[id]">) {
-  const { id } = await params;
+export default async function VerifyPage({ params, searchParams }: PageProps<"/verify/[id]">) {
+  const [{ id }, { lang: langParam }] = await Promise.all([params, searchParams]);
+  const lang = recordLang(langParam);
   const card = await getPublicCard(id);
-  if (!card) return <CardNotVerified />;
+  if (!card) return <CardNotVerified lang={lang} />;
 
-  return <VerifyView card={card} />;
+  return <VerifyView card={card} lang={lang} />;
 }

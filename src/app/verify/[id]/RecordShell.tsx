@@ -2,139 +2,182 @@
 import { COMPANY } from "@/config/company";
 import s from "./RecordPage.module.css";
 
+export type RecordLang = "ar" | "en";
+
+/** `?lang=en` shows the page in English; anything else is Arabic (the default). */
+export function recordLang(value: unknown): RecordLang {
+  return value === "en" ? "en" : "ar";
+}
+
 /**
- * Fixed Arabic text of the public record page (the client's reference page is
- * Arabic-only, so this page deliberately does not follow the UI language switch).
+ * Fixed text of the public record page, in both languages. Deliberately separate
+ * from the app's i18n dictionaries: this page has its own Arabic/English switch.
  */
 export const RECORD_TEXT = {
-  title: "نظام سجلات المركبات",
-  subtitle: "بطاقة الرقم المميز لحواجز الشاحنات والمقطورات",
-  madeOn: "تاريخ صنع الحاجز",
-  fields: {
-    barrierNo: "الرقم المميز للحاجز",
-    vehicleType: "نوع المركبة",
-    vin: "رقم الهيكل للمركبة",
+  ar: {
+    cardTitle: "بطاقة الرقم المميز للحاجز",
+    company: "اسم المصنع",
+    manufacturerCode: "رمز المصنع",
+    country: "بلد المنشأ",
+    issueDate: "تاريخ الإصدار",
+    status: "الحالة",
+    valid: "سارية",
+    cardData: "بيانات البطاقة",
     brand: "ماركة المركبة",
-    model: "اسم طراز المركبة",
-    modelYear: "سنة موديل المركبة",
+    deviceType: "نوع الحاجز",
+    modelYear: "سنة الموديل",
+    modelName: "اسم طراز المركبة",
+    vehicleType: "نوع المركبة",
+    vin: "رقم هيكل المركبة (VIN)",
+    madeOn: "تاريخ صنع الحاجز",
+    serial: "الرقم التسلسلي للحاجز",
+    uniqueNo: "الرقم المميز للحاجز",
+    sidePhoto: "صورة الحاجز الجانبي",
+    rearPhoto: "صورة الحاجز الخلفي",
+    viewPhoto: "عرض الصورة",
+    deviceTypes: { F: "حاجز أمامي", S: "حاجز جانبي", R: "حاجز خلفي" } as Record<string, string>,
+    listJoin: "، ",
+    notVerified: "غير موثّقة",
+    notVerifiedTitle: "تعذّر التحقق من هذه البطاقة",
+    notVerifiedDesc: "لم يتم العثور على بطاقة بهذا الرمز. قد تكون البطاقة مزوّرة أو الرابط غير صحيح، فلا تعتمد عليها.",
+    unavailable: "غير متاح",
+    errorTitle: "تعذّر الاتصال بالخادم",
+    errorDesc: "لم نتمكن من التحقق من البطاقة حالياً. هذا لا يعني أن البطاقة غير صالحة، يرجى المحاولة مرة أخرى بعد قليل.",
+    retry: "إعادة المحاولة",
+    contact: "تواصل معنا",
+    rights: "جميع الحقوق محفوظة.",
+    switchLabel: "English",
   },
-  feedback: "إرسال ملاحظة على السجل",
-  faq: "الأسئلة الشائعة",
-  notVerifiedTitle: "تعذّر التحقق من هذه البطاقة",
-  notVerifiedDesc: "لم يتم العثور على بطاقة بهذا الرمز. قد تكون البطاقة مزوّرة أو الرابط غير صحيح، فلا تعتمد عليها.",
-  errorTitle: "تعذّر الاتصال بالخادم",
-  errorDesc: "لم نتمكن من التحقق من البطاقة حالياً. هذا لا يعني أن البطاقة غير صالحة، يرجى المحاولة مرة أخرى بعد قليل.",
-  retry: "إعادة المحاولة",
+  en: {
+    cardTitle: "Barrier Unique ID Card",
+    company: "Company Name",
+    manufacturerCode: "Manufacturer Code",
+    country: "Country of Origin",
+    issueDate: "Issuance Date",
+    status: "Status",
+    valid: "Valid",
+    cardData: "Card Data",
+    brand: "Brand Name",
+    deviceType: "Protective Device Type",
+    modelYear: "Model Year",
+    modelName: "Vehicle Model Name",
+    vehicleType: "Vehicle Type",
+    vin: "Vehicle Identification Number (VIN)",
+    madeOn: "Date of UPD Manufacture",
+    serial: "UPD Serial Number",
+    uniqueNo: "UPD Unique Number",
+    sidePhoto: "Side Barrier Picture",
+    rearPhoto: "Rear Barrier Picture",
+    viewPhoto: "View picture",
+    deviceTypes: { F: "Front Barrier", S: "Side Barrier", R: "Rear Barrier" } as Record<string, string>,
+    listJoin: ", ",
+    notVerified: "Not verified",
+    notVerifiedTitle: "This card could not be verified",
+    notVerifiedDesc: "No card exists with this code. The card may be forged or the link is wrong — do not rely on it.",
+    unavailable: "Unavailable",
+    errorTitle: "Could not reach the server",
+    errorDesc: "We couldn't check the card right now. This does not mean the card is invalid — please try again shortly.",
+    retry: "Try again",
+    contact: "Contact Us",
+    rights: "All rights reserved.",
+    switchLabel: "عربي",
+  },
 } as const;
 
-/** Page frame: header (logo + name + titles), the given content, and the contact footer. */
-export function RecordShell({ children, feedbackSubject }: { children: React.ReactNode; feedbackSubject?: string }) {
-  const page = COMPANY.record_page;
-  const subject = encodeURIComponent(`${RECORD_TEXT.feedback}${feedbackSubject ? ` — ${feedbackSubject}` : ""}`);
-  const feedbackHref = page.email
-    ? `mailto:${page.email}?subject=${subject}`
-    : page.phone
-      ? `tel:${page.phone.replace(/\s/g, "")}`
-      : null;
+/** Page frame: the company header with the language switch, the given content, and the footer. */
+export function RecordShell({ lang, children }: { lang: RecordLang; children: React.ReactNode }) {
+  const t = RECORD_TEXT[lang];
+  const contacts = COMPANY.record_page;
 
   return (
-    <main className={s.page}>
-      <div className={s.sheet} dir="rtl" lang="ar">
-        <header className={s.header}>
+    <div className={s.page} dir={lang === "ar" ? "rtl" : "ltr"} lang={lang}>
+      <header className={s.header}>
+        <div className={s.headerInner}>
           <div className={s.brand}>
-            <img className={s.logo} src={COMPANY.card_logo_path} alt={COMPANY.name_en} />
-            <span>{page.brand}</span>
+            <img className={s.logo} src={COMPANY.card_logo_path} alt="" />
+            <div className={s.brandNames}>
+              <strong lang="ar">{COMPANY.name_ar}</strong>
+              <span lang="en">{COMPANY.name_en}</span>
+            </div>
           </div>
-          <h1 className={s.title}>{RECORD_TEXT.title}</h1>
-          <p className={s.subtitle}>{RECORD_TEXT.subtitle}</p>
-        </header>
+          <a className={s.langSwitch} href={`?lang=${lang === "ar" ? "en" : "ar"}`} lang={lang === "ar" ? "en" : "ar"}>
+            <GlobeIcon />
+            {t.switchLabel}
+          </a>
+        </div>
+      </header>
 
-        {children}
+      <main className={s.main}>{children}</main>
 
-        <footer className={s.footer}>
-          <ul className={s.contacts}>
-            {page.phone && (
-              <li>
-                <span className={s.icon}>
-                  <PhoneIcon />
-                </span>
-                <a href={`tel:${page.phone.replace(/\s/g, "")}`}>
-                  <bdi>{page.phone}</bdi>
-                </a>
-              </li>
-            )}
-            {page.fax && (
-              <li>
-                <span className={s.icon}>
-                  <FaxIcon />
-                </span>
-                <bdi>{page.fax}</bdi>
-              </li>
-            )}
-            {page.email && (
-              <li>
-                <span className={s.icon}>
-                  <MailIcon />
-                </span>
-                <a href={`mailto:${page.email}`}>
-                  <bdi>{page.email}</bdi>
-                </a>
-              </li>
-            )}
-          </ul>
-          {feedbackHref ? (
-            <a className={s.action} href={feedbackHref}>
-              {RECORD_TEXT.feedback} <ClipboardIcon />
-            </a>
-          ) : (
-            <button type="button" className={s.action}>
-              {RECORD_TEXT.feedback} <ClipboardIcon />
-            </button>
+      <footer className={s.footer}>
+        <div className={s.footerInner}>
+          {(contacts.phone || contacts.email) && (
+            <div className={s.footerCol}>
+              <h2>{t.contact}</h2>
+              <ul>
+                {contacts.phone && (
+                  <li>
+                    <a href={`tel:${contacts.phone.replace(/\s/g, "")}`}>
+                      <bdi dir="ltr">{contacts.phone}</bdi>
+                    </a>
+                  </li>
+                )}
+                {contacts.email && (
+                  <li>
+                    <a href={`mailto:${contacts.email}`}>
+                      <bdi dir="ltr">{contacts.email}</bdi>
+                    </a>
+                  </li>
+                )}
+              </ul>
+            </div>
           )}
-          <div className={s.legal}>
-            {page.legal} {new Date().getFullYear()}
-          </div>
-          <div className={s.bottom}>
-            <span>{RECORD_TEXT.faq}</span>
-            <span className={s.divider}>|</span>
-            <span dir="ltr">{page.brand_en}</span>
-          </div>
-        </footer>
-      </div>
-    </main>
+          <p className={s.copyright}>
+            © {new Date().getFullYear()} <strong>{lang === "ar" ? COMPANY.name_ar : COMPANY.name_en}</strong>. {t.rights}
+          </p>
+        </div>
+      </footer>
+    </div>
   );
 }
 
-const iconProps = { viewBox: "0 0 24 24", fill: "currentColor", "aria-hidden": true } as const;
+/** One "label above a bold value" item, as used in both panels. */
+export function Item({ label, children, ltr }: { label: string; children: React.ReactNode; ltr?: boolean }) {
+  return (
+    <div className={s.item}>
+      <span className={s.label}>{label}</span>
+      <span className={s.value} dir={ltr ? "ltr" : undefined}>
+        {children}
+      </span>
+    </div>
+  );
+}
 
-function PhoneIcon() {
+const iconProps = { viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.8, "aria-hidden": true } as const;
+
+function GlobeIcon() {
   return (
     <svg {...iconProps}>
-      <path d="M6.6 10.8a15.2 15.2 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.6a1 1 0 0 1-.25 1Z" />
+      <circle cx="12" cy="12" r="9" />
+      <path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3Z" />
     </svg>
   );
 }
 
-function FaxIcon() {
+export function CheckIcon() {
   return (
-    <svg {...iconProps}>
-      <path d="M7 3h10v4H7zM5 8h14a3 3 0 0 1 3 3v6h-3v4H5v-4H2v-6a3 3 0 0 1 3-3Zm2 7v4h10v-4zm11-4.5a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z" />
+    <svg viewBox="0 0 24 24" aria-hidden>
+      <circle cx="12" cy="12" r="11" fill="currentColor" />
+      <path d="m7 12.4 3.2 3.2L17 8.8" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
 
-function MailIcon() {
+export function EyeIcon() {
   return (
     <svg {...iconProps}>
-      <path d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm9 7.2L4.3 7H4v.8l8 5.4 8-5.4V7h-.3Z" />
-    </svg>
-  );
-}
-
-function ClipboardIcon() {
-  return (
-    <svg {...iconProps}>
-      <path d="M9 2h6a1 1 0 0 1 1 1v1h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2V3a1 1 0 0 1 1-1Zm1 2v2h4V4Zm5.3 6.3-4.3 4.3-2.3-2.3-1.4 1.4 3.7 3.7 5.7-5.7Z" />
+      <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z" />
+      <circle cx="12" cy="12" r="3" />
     </svg>
   );
 }
