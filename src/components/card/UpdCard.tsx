@@ -128,7 +128,7 @@ export function UpdCard({ card, qrSvg, ref }: Props) {
           {CARD_TEXT.issuedBy_ar(COMPANY.name_ar)}
         </p>
       </div>
-      <img className={s.smallLogo} src={COMPANY.card_logo_path} alt={COMPANY.name_en} />
+      <img className={s.smallLogo} src={COMPANY.logo_mark_path} alt="SASO" />
       <img className={s.watermark} src={COMPANY.logo_mark_path} alt="" aria-hidden />
 
       {/* ---------- VIN, one character per box ---------- */}

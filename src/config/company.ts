@@ -13,7 +13,7 @@ export const COMPANY = {
   logo_path: "/logo.png",
   // Square version (the SASO triangle mark only), used as the browser tab icon and card watermark.
   logo_mark_path: "/logo-mark.png",
-  // The client's own logo: printed on the card (small logo above VIN) and shown on the public record page.
+  // The client's own logo, shown on the public record page.
   // ⚠ Currently the gear logo from the client's reference PDF — replace if it isn't theirs.
   card_logo_path: "/manufacturer-logo.png",
   // Not present in the reference PDF — fill in, e.g. ["+966 11 000 0000", "+966 50 000 0000"].
