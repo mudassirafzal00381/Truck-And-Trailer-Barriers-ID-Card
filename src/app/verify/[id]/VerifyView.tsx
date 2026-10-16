@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { COMPANY } from "@/config/company";
 import { barrierPhoto, photoKindsFor } from "@/lib/barrier-photos";
 import { formatDisplayDate, type PublicCard } from "@/lib/cards";
 import { formatUnderRunNumberForDisplay } from "@/lib/under-run-number";
@@ -23,6 +24,7 @@ function photoFileName(url: string): string {
  */
 export function VerifyView({ card, lang }: { card: PublicCard; lang: RecordLang }) {
   const t = RECORD_TEXT[lang];
+  const address = lang === "ar" ? COMPANY.record_page.address_ar : COMPANY.record_page.address_en;
   const barrierNo = formatUnderRunNumberForDisplay(card.under_run_number_prefix, card.upd_type, card.under_run_number_suffix);
   const deviceTypes = card.upd_type
     .split("/")
@@ -43,6 +45,7 @@ export function VerifyView({ card, lang }: { card: PublicCard; lang: RecordLang 
         <div className={s.summaryGrid}>
           <Item label={t.company}>{card.manufacturer_name}</Item>
           <Item label={t.manufacturerCode}>{card.manufacturer_code}</Item>
+          {address && <Item label={t.address}>{address}</Item>}
           <Item label={t.country}>{card.country_of_origin}</Item>
           <Item label={t.issueDate} ltr>
             {formatDisplayDate(card.card_issue_date)}

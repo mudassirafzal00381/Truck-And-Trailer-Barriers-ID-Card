@@ -32,6 +32,9 @@ export const COMPANY = {
   // Empty value = the item is still shown, just not clickable.
   // ⚠ Fill in the real addresses before handing cards to customers.
   record_page: {
+    // Shown next to the manufacturer code in the summary panel. Empty = left out.
+    address_en: "Building 5187, Al Mariad 6, Al Maarid Dist., KHAMIS MUSHAYT, 62451, Saudi Arabia",
+    address_ar: "مبنى 5187، المعارض 6، حي المعارض، خميس مشيط، 62451، المملكة العربية السعودية",
     faq_url: "",
     terms_url: "",
     social: {
