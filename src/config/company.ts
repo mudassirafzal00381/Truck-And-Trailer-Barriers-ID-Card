@@ -28,12 +28,19 @@ export const COMPANY = {
     website: "",
     email: "info@example.com",
   },
-  // Public record page (what a scanned QR code opens): contacts in its footer.
-  // Empty value = row hidden.
-  // ⚠ Placeholders — replace them with real ones before handing cards to customers.
+  // Public record page (what a scanned QR code opens): link targets in its footer.
+  // Empty value = the item is still shown, just not clickable.
+  // ⚠ Fill in the real addresses before handing cards to customers.
   record_page: {
-    phone: "+966 00 000 0000",
-    email: "info@example.com",
+    faq_url: "",
+    terms_url: "",
+    social: {
+      x: "",
+      facebook: "",
+      youtube: "",
+      snapchat: "",
+      instagram: "",
+    },
   },
   // Shown on the QR page when a card has no uploaded side / rear picture. Replace
   // these files (or point to your own photos in /public) to change them.

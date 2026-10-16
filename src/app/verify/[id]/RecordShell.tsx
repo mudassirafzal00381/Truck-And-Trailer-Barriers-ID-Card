@@ -43,8 +43,10 @@ export const RECORD_TEXT = {
     errorTitle: "تعذّر الاتصال بالخادم",
     errorDesc: "لم نتمكن من التحقق من البطاقة حالياً. هذا لا يعني أن البطاقة غير صالحة، يرجى المحاولة مرة أخرى بعد قليل.",
     retry: "إعادة المحاولة",
-    contact: "تواصل معنا",
-    rights: "جميع الحقوق محفوظة.",
+    support: "التواصل والدعم",
+    faq: "الأسئلة الشائعة",
+    terms: "الشروط والأحكام",
+    social: "وسائل التواصل الاجتماعي",
     switchLabel: "English",
     beta: "تجريبي",
     login: "تسجيل الدخول / التسجيل",
@@ -78,18 +80,20 @@ export const RECORD_TEXT = {
     errorTitle: "Could not reach the server",
     errorDesc: "We couldn't check the card right now. This does not mean the card is invalid — please try again shortly.",
     retry: "Try again",
-    contact: "Contact Us",
-    rights: "All rights reserved.",
+    support: "Contact & Support",
+    faq: "Frequently Asked Questions",
+    terms: "Terms & Conditions",
+    social: "Social Media",
     switchLabel: "عربي",
     beta: "Beta",
     login: "Login / Register",
   },
 } as const;
 
-/** Page frame: the Saudi Standards header with the language switch, the given content, and the footer. */
+/** Page frame: the Saudi Standards header with the language switch, the given content, and the green footer. */
 export function RecordShell({ lang, children }: { lang: RecordLang; children: React.ReactNode }) {
   const t = RECORD_TEXT[lang];
-  const contacts = COMPANY.record_page;
+  const links = COMPANY.record_page;
 
   return (
     <div className={s.page} dir={lang === "ar" ? "rtl" : "ltr"} lang={lang}>
@@ -119,33 +123,55 @@ export function RecordShell({ lang, children }: { lang: RecordLang; children: Re
 
       <footer className={s.footer}>
         <div className={s.footerInner}>
-          {(contacts.phone || contacts.email) && (
-            <div className={s.footerCol}>
-              <h2>{t.contact}</h2>
-              <ul>
-                {contacts.phone && (
-                  <li>
-                    <a href={`tel:${contacts.phone.replace(/\s/g, "")}`}>
-                      <bdi dir="ltr">{contacts.phone}</bdi>
-                    </a>
-                  </li>
-                )}
-                {contacts.email && (
-                  <li>
-                    <a href={`mailto:${contacts.email}`}>
-                      <bdi dir="ltr">{contacts.email}</bdi>
-                    </a>
-                  </li>
-                )}
-              </ul>
-            </div>
-          )}
-          <p className={s.copyright}>
-            © {new Date().getFullYear()} <strong>{lang === "ar" ? COMPANY.name_ar : COMPANY.name_en}</strong>. {t.rights}
-          </p>
+          <div className={s.footerCol}>
+            <h2>{t.support}</h2>
+            <FooterLink href={links.faq_url}>{t.faq}</FooterLink>
+          </div>
+          <div className={s.footerCol}>
+            <h2>{t.terms}</h2>
+            <FooterLink href={links.terms_url}>{t.terms}</FooterLink>
+          </div>
+          <div className={s.footerCol}>
+            <h2>{t.social}</h2>
+            <ul className={s.socials}>
+              {SOCIALS.map(({ key, label, Icon }) => (
+                <li key={key}>
+                  <FooterLink href={links.social[key]} className={s.socialButton} label={label}>
+                    <Icon />
+                  </FooterLink>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </footer>
     </div>
+  );
+}
+
+/** A footer link; without an address (not filled in yet in COMPANY.record_page) it is plain text. */
+function FooterLink({
+  href,
+  className,
+  label,
+  children,
+}: {
+  href: string;
+  className?: string;
+  label?: string;
+  children: React.ReactNode;
+}) {
+  if (!href) {
+    return (
+      <span className={className} aria-label={label} role={label ? "img" : undefined}>
+        {children}
+      </span>
+    );
+  }
+  return (
+    <a className={className} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}>
+      {children}
+    </a>
   );
 }
 
@@ -191,3 +217,56 @@ function UserIcon() {
     </svg>
   );
 }
+
+const filledIcon = { viewBox: "0 0 24 24", fill: "currentColor", "aria-hidden": true } as const;
+
+/** Footer social buttons, in the order shown; each key is a COMPANY.record_page.social address. */
+const SOCIALS = [
+  {
+    key: "x",
+    label: "X",
+    Icon: () => (
+      <svg {...filledIcon}>
+        <path d="M17.75 3h3.07l-6.7 7.66L22 21h-6.17l-4.83-6.32L5.47 21H2.4l7.17-8.2L2 3h6.33l4.37 5.77L17.75 3Zm-1.08 16.18h1.7L7.4 4.73H5.57l11.1 14.45Z" />
+      </svg>
+    ),
+  },
+  {
+    key: "facebook",
+    label: "Facebook",
+    Icon: () => (
+      <svg {...filledIcon}>
+        <path d="M13.5 22v-8.2h2.75l.41-3.2H13.5V8.56c0-.93.26-1.56 1.59-1.56h1.7V4.14A22.8 22.8 0 0 0 14.32 4C11.87 4 10.2 5.49 10.2 8.23v2.37H7.44v3.2h2.76V22h3.3Z" />
+      </svg>
+    ),
+  },
+  {
+    key: "youtube",
+    label: "YouTube",
+    Icon: () => (
+      <svg {...filledIcon}>
+        <path d="M21.58 7.19a2.5 2.5 0 0 0-1.76-1.77C18.25 5 12 5 12 5s-6.25 0-7.82.42a2.5 2.5 0 0 0-1.76 1.77C2 8.76 2 12 2 12s0 3.24.42 4.81a2.5 2.5 0 0 0 1.76 1.77C5.75 19 12 19 12 19s6.25 0 7.82-.42a2.5 2.5 0 0 0 1.76-1.77C22 15.24 22 12 22 12s0-3.24-.42-4.81ZM10 15V9l5.2 3-5.2 3Z" />
+      </svg>
+    ),
+  },
+  {
+    key: "snapchat",
+    label: "Snapchat",
+    Icon: () => (
+      <svg {...filledIcon}>
+        <path d="M12.06 2.5c2.9 0 5.07 2.2 5.07 5.13 0 .62-.04 1.32-.1 2.02.32.17.76.1 1.12-.06.5-.22 1.2.06 1.2.6 0 .45-.42.73-1.27 1.06-.47.18-1.1.4-1.04.9.17 1.33 1.92 3.48 3.84 3.86.33.07.5.34.4.63-.2.6-1.38.96-2.68 1.18-.12.28-.16.8-.38.96-.3.2-.95-.06-1.9.08-1.13.17-1.98 1.64-4.26 1.64s-3.07-1.47-4.2-1.64c-.96-.14-1.62.12-1.92-.08-.22-.16-.26-.68-.38-.96-1.3-.22-2.47-.58-2.68-1.18-.1-.29.08-.56.4-.63 1.93-.38 3.68-2.53 3.84-3.86.07-.5-.56-.72-1.03-.9-.86-.33-1.28-.61-1.28-1.06 0-.54.7-.82 1.2-.6.36.16.8.23 1.12.06-.06-.7-.1-1.4-.1-2.02C6.99 4.7 9.16 2.5 12.06 2.5Z" />
+      </svg>
+    ),
+  },
+  {
+    key: "instagram",
+    label: "Instagram",
+    Icon: () => (
+      <svg {...iconProps} strokeWidth={2}>
+        <rect x="3.5" y="3.5" width="17" height="17" rx="4.5" />
+        <circle cx="12" cy="12" r="4" />
+        <circle cx="17.2" cy="6.8" r="0.6" fill="currentColor" />
+      </svg>
+    ),
+  },
+] as const;

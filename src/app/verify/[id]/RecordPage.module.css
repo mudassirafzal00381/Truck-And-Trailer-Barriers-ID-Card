@@ -1,7 +1,8 @@
 /*
  * Public record page (what a scanned QR code opens), in the company's own
  * colours: white Saudi Standards header (logo, Beta badge, language and login links), white rounded panels
- * with soft shadows, labels above bold values, and a navy footer.
+ * with soft shadows, labels above bold values, and a dark green footer
+ * (support, terms and social media links).
  */
 
 .page {
@@ -254,34 +255,30 @@
 /* ---------- footer ---------- */
 
 .footer {
-  background: var(--navy);
+  background: #074f35;
   color: #fff;
 }
 
 .footerInner {
-  max-width: 1032px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2.25rem;
+  max-width: 1720px;
   margin: 0 auto;
-  padding: 2rem 1.5rem 1.5rem;
-}
-
-.footerCol {
-  max-width: 300px;
+  padding: 3.5rem 1.75rem 4rem;
 }
 
 .footerCol h2 {
-  margin: 0 0 0.75rem;
-  padding-bottom: 0.6rem;
+  margin: 0 0 1.1rem;
+  padding-bottom: 0.9rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: 1.3rem;
+  font-weight: 700;
 }
 
-.footerCol ul {
-  display: grid;
-  gap: 0.45rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+.footerCol > a,
+.footerCol > span {
+  font-size: 1.2rem;
 }
 
 .footerCol a {
@@ -289,18 +286,37 @@
   text-decoration: none;
 }
 
-.footerCol a:hover {
+.footerCol > a:hover {
   text-decoration: underline;
 }
 
-.copyright {
-  margin: 1.75rem 0 0;
-  color: rgba(255, 255, 255, 0.85);
-  font-size: 0.9rem;
+.socials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.copyright strong {
-  color: #fff;
+/* Square outlined icon buttons (X, Facebook, YouTube, Snapchat, Instagram). */
+.socialButton {
+  display: grid;
+  place-items: center;
+  width: 53px;
+  height: 53px;
+  border: 1px solid #fff;
+  border-radius: 6px;
+  transition: background-color 0.15s;
+}
+
+a.socialButton:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.socialButton svg {
+  width: 26px;
+  height: 26px;
 }
 
 /* ---------- smaller screens ---------- */
@@ -361,6 +377,22 @@
     gap: 1rem;
   }
   .footerInner {
-    padding: 1.5rem 1rem 1.25rem;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.75rem;
+    padding: 2rem 1rem 2.5rem;
+  }
+  .footerCol h2 {
+    font-size: 1.1rem;
+  }
+  .footerCol > a,
+  .footerCol > span {
+    font-size: 1rem;
+  }
+  .socials {
+    gap: 0.9rem;
+  }
+  .socialButton {
+    width: 46px;
+    height: 46px;
   }
 }
