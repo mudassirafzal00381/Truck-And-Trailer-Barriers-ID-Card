@@ -43,10 +43,10 @@
   font-size: 0.78rem;
 }
 
-/* Organisation logo (wide wordmark + mark). */
+/* The client's logo (COMPANY.card_logo_path). */
 .logo {
   flex: none;
-  height: 46px;
+  height: 40px;
   width: auto;
 }
 

@@ -5,7 +5,7 @@ Issues **Unique Under-run Protection Device (UPD) cards** for trucks and trailer
 Each card:
 
 - has a unique public ID,
-- is rendered as an exact replica of the official bilingual (Arabic + English) PDF,
+- is rendered as a bilingual (Arabic + English) A4 card in the client's name,
 - carries a QR code that opens a **public verification page** (`/verify/<id>`), where anyone can confirm it is genuine.
 
 The admin side is protected by email and password login (Supabase Auth). The app's own interface is available in **English** (the default), **Arabic** and **Urdu**.
@@ -142,7 +142,7 @@ Connect the phone to the same Wi-Fi and create a new card. If Windows asks, allo
 | What | Where |
 |---|---|
 | Company details (names, code E30, country, logo, **phone numbers**) | [`src/config/company.ts`](src/config/company.ts), the single source of truth |
-| Logo | [`public/logo.png`](public/logo.png) (header, login, record page); `public/logo-card.png` is the smaller copy printed on the card; `public/logo-mark.png` (triangle only) is the browser tab icon |
+| Logos | [`public/logo.png`](public/logo.png): SASO logo on the admin pages (header, login); `public/logo-mark.png` (triangle only) is the browser tab icon. [`public/manufacturer-logo.png`](public/manufacturer-logo.png): the client's logo, on the card and the public record page |
 | Fixed bilingual card text (from the reference PDF) | [`src/config/card-template.ts`](src/config/card-template.ts) |
 | UI translations | [`src/i18n/en.json`](src/i18n/en.json), [`src/i18n/ar.json`](src/i18n/ar.json), [`src/i18n/ur.json`](src/i18n/ur.json); language list and default in [`src/i18n/languages.ts`](src/i18n/languages.ts) |
 | Language context + `t()` | [`src/i18n/LanguageProvider.tsx`](src/i18n/LanguageProvider.tsx) |
@@ -160,23 +160,22 @@ Connect the phone to the same Wi-Fi and create a new card. If Windows asks, allo
   - **Fonts:** English uses **Noto Sans**, Arabic **Noto Sans Arabic**, and Urdu **Noto Nastaliq Urdu**, the calligraphic style Urdu readers expect. Typed data never uses Nastaliq.
   - **Adding a string:** add the same key to **all three** of `en.json`, `ar.json` and `ur.json`. TypeScript reports an error if any file is missing a key.
   - **Changing the default:** set `DEFAULT_LANGUAGE` in [`src/i18n/languages.ts`](src/i18n/languages.ts).
-- **The official card** always uses the fixed Arabic + English format from the reference PDF, in every UI language. It never uses `t()`, and its text comes only from `src/config/card-template.ts`. Downloaded PDFs are pixel-identical whichever UI language is active.
+- **The card** always uses the fixed Arabic + English format from the reference PDF, in every UI language. It never uses `t()`, and its text comes only from `src/config/card-template.ts`. Downloaded PDFs are identical whichever UI language is active.
 
-## The official card (PDF replica)
+## The UPD card (A4)
 
-[`src/components/card/UpdCard.tsx`](src/components/card/UpdCard.tsx) and its [CSS module](src/components/card/UpdCard.module.css) recreate `CargoBarriersCard (286).pdf`:
+[`src/components/card/UpdCard.tsx`](src/components/card/UpdCard.tsx) and its [CSS module](src/components/card/UpdCard.module.css) follow the layout of the client's A4 reference card, **issued in the client's own name**:
 
-- **Page and geometry:** US Letter landscape, 792 × 612 pt. Positions, sizes and colors were read from the reference PDF's own coordinates.
-- **Fonts:** Noto Sans for Latin text and Noto Sans Arabic for Arabic, the same fonts the reference uses.
-- **Accuracy:** printed output was measured against the reference. The median text-baseline error is about 0.2 pt for Latin and 0.6 pt for Arabic (1 pt ≈ 0.35 mm).
-- **Same in every UI language:** verified pixel for pixel.
-- **Logo on the card:** the SASO logo sits at the top right, between the title and the close box (`.logo` in the CSS module).
-- **PDF file name:** the number as printed on the card after "KSA E30", e.g. `S-R-F AAA 263290.pdf`. File names can't contain `/`, so it becomes `-`.
-- **Merged cells 8 and 9:** the reference draws them as one box, and the replica copies that. To separate them, remove the `joined`/`joinedLeft` classes.
+- **Page and geometry:** A4 portrait, 595 × 842 pt. Positions, sizes, colours and font sizes were read from the reference PDF's own coordinates and checked by overlaying it on the rendered card.
+- **Font:** Cairo (Arabic and Latin), as in the reference.
+- **Layout, top to bottom:** header band (titles, card number and issue date, the client's logo and name) → "issued by" statement → the client's small logo → the VIN in 17 boxes → the details grid (manufacturer, code, country, manufacture date, model, brand, model year, UPD type, distinguished number, technical references) → validity note → verification band with the QR code → "issued by" line → the client's contact footer.
+- **Not copied from the reference, on purpose:** the regulator's certification statement, its logo, watermark and contact details. The card says the client issued it, and shows the client's logo and contacts (`card_logo_path` and `card_footer` in [`src/config/company.ts`](src/config/company.ts)).
+- **Same in every UI language:** the card never uses `t()`.
+- **PDF file name:** the number as printed after "KSA E30", e.g. `S-R-F AAA 263290.pdf`. File names can't contain `/`, so it becomes `-`.
 
 Ways to get the card out:
 
-- **Print:** vector output on exactly one landscape Letter page (`@page upd-card`).
+- **Print:** vector output on exactly one A4 portrait page (`@page upd-card`).
 - **Download PDF:** runs entirely in the browser. The browser draws the card itself, so Arabic letters join correctly. It embeds only the fonts the card uses, at about 290 dpi.
 - **QR code:** generated from the saved `qr_url`. The same URL always gives the same code, so the image isn't stored.
 
@@ -184,7 +183,7 @@ Ways to get the card out:
 
 - **Card number:** every card gets a random **10-digit "Barrier Unique ID Card" number** (e.g. `3426822545`). The database guarantees it's unique. It's shown on the admin preview and in the admin list and search.
 - **Public record page (what the QR opens):** an Arabic-only page in the layout the client asked for:
-  - a header with the SASO logo and the name "سجل هتان" (top-left),
+  - a header with the client's logo (`card_logo_path`) and the name "سجل هتان" (top-left),
   - a green company band showing the UPD manufacture date,
   - grey field boxes: distinguished number, **vehicle type**, VIN, brand, model, model year,
   - a light-grey contact footer.

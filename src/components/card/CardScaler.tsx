@@ -2,9 +2,9 @@
 
 import { useLayoutEffect, useRef, useState } from "react";
 
-/** Card size in CSS px (792 × 612 pt at 96 dpi). */
-const CARD_WIDTH_PX = 1056;
-const CARD_HEIGHT_PX = 816;
+/** Card size in CSS px (A4: 595 × 842 pt at 96 dpi). */
+const CARD_WIDTH_PX = (595 * 4) / 3;
+const CARD_HEIGHT_PX = (842 * 4) / 3;
 
 /**
  * Shrinks the fixed-size card to fit narrow screens without reflowing it, so the

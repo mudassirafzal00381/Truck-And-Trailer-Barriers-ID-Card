@@ -7,8 +7,8 @@
  */
 import { pdfFileBaseName } from "./under-run-number";
 
-const PAGE_WIDTH_PT = 792; // US Letter landscape, same as the reference PDF
-const PAGE_HEIGHT_PT = 612;
+const PAGE_WIDTH_PT = 595; // A4 portrait, same as the reference PDF
+const PAGE_HEIGHT_PT = 842;
 
 /** Downloads the rendered card element as a one-page PDF, e.g. "S-R-F AAA 263290.pdf". */
 export async function downloadCardPdf(cardEl: HTMLElement, card: { upd_type: string; under_run_number_suffix: string; under_run_number_full: string }) {
@@ -24,7 +24,7 @@ export async function downloadCardPdf(cardEl: HTMLElement, card: { upd_type: str
     fontEmbedCSS: await fontCssFor(cardEl),
   });
 
-  const pdf = new jsPDF({ orientation: "landscape", unit: "pt", format: "letter", compress: true });
+  const pdf = new jsPDF({ orientation: "portrait", unit: "pt", format: [PAGE_WIDTH_PT, PAGE_HEIGHT_PT], compress: true });
   pdf.setProperties({ title });
   pdf.addImage(png, "PNG", 0, 0, PAGE_WIDTH_PT, PAGE_HEIGHT_PT, undefined, "FAST");
   pdf.save(fileName);

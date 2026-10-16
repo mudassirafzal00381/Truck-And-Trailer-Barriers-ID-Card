@@ -1,18 +1,21 @@
-/* eslint-disable @next/next/no-img-element -- a plain <img> keeps the logo exportable to PDF */
-import { CARD_TEXT } from "@/config/card-template";
+/* eslint-disable @next/next/no-img-element -- plain <img> elements keep the logos exportable to PDF */
+import { CARD_TEXT, DEFAULT_TECHNICAL_REFERENCES, DEFAULT_TECHNICAL_REFERENCES_PRINTED } from "@/config/card-template";
 import { COMPANY } from "@/config/company";
-import { formatCardDate, type UpdCard as UpdCardRecord } from "@/lib/cards";
+import { formatDisplayDate, type UpdCard as UpdCardRecord } from "@/lib/cards";
 import s from "./UpdCard.module.css";
 
 /**
- * The official UPD card — a replica of the reference PDF.
+ * The UPD card — A4 portrait, in the layout of the client's reference PDF, issued
+ * in the client's own name (COMPANY): their name and logo in the header, their
+ * contact details in the footer.
  *
  * Its text is FIXED bilingual Arabic + English from `CARD_TEXT`. It deliberately
  * does not use the app's Arabic/Urdu `t()` system: the UI language toggle must
- * never change this regulatory document.
+ * never change this document.
  */
 export type UpdCardData = Pick<
   UpdCardRecord,
+  | "card_number"
   | "manufacturer_name"
   | "manufacturer_code"
   | "country_of_origin"
@@ -23,8 +26,7 @@ export type UpdCardData = Pick<
   | "vehicle_model_year"
   | "upd_type"
   | "vehicle_chassis_number"
-  | "under_run_number_prefix"
-  | "under_run_number_suffix"
+  | "under_run_number_full"
   | "card_issue_date"
 >;
 
@@ -35,122 +37,194 @@ type Props = {
   ref?: React.Ref<HTMLDivElement>;
 };
 
-type RowKey = keyof typeof CARD_TEXT.rows;
+type FieldKey = keyof typeof CARD_TEXT.fields;
 
-/** Renders Latin runs inside an Arabic label (e.g. "(VIN)") in regular weight, as in the reference. */
-function ArabicLabel({ text }: { text: string }) {
-  return text.split(/([A-Za-z0-9()/]+)/).map((part, i) =>
-    i % 2 === 1 ? (
-      <span key={i} className={s.latin}>
-        {part}
-      </span>
-    ) : (
-      part
-    ),
-  );
-}
+/** Grid geometry from the reference PDF (pt): three columns, four rows. */
+const COLUMN_LEFT = [16, 206.3, 396.7];
+const ROWS = [
+  { top: 247.5, height: 30.5 },
+  { top: 284, height: 30.5 },
+  { top: 320.5, height: 41.7 },
+  { top: 368.2, height: 64.2 },
+];
+const VIN_BOXES = 17;
 
-function Row({ label, tall, children }: { label: RowKey; tall?: boolean; children: React.ReactNode }) {
-  const text = CARD_TEXT.rows[label];
+function Field({ field, col, row, children }: { field: FieldKey; col: number; row: number; children: React.ReactNode }) {
+  const label = CARD_TEXT.fields[field];
+  const { top, height } = ROWS[row];
   return (
-    <div className={`${s.row} ${tall ? s.tall : ""}`}>
-      <div className={`${s.label} ${s.labelEn}`}>{text.en}</div>
-      <div className={s.value} dir="auto">
-        {children}
-      </div>
-      <div lang="ar" className={`${s.label} ${s.labelAr}`}>
-        <span>
-          <ArabicLabel text={text.ar} />
-        </span>
+    <div className={s.field} style={{ left: `${COLUMN_LEFT[col]}pt`, top: `${top}pt`, height: `${height}pt` }}>
+      <div className={s.value}>{children}</div>
+      <div className={s.label}>
+        <span lang="ar">{label.ar}</span>
+        <span>{label.en}</span>
       </div>
     </div>
   );
 }
 
-/** Splits the stored number back into its 16 printed cells (cell 7 = UPD type). */
-function numberCells(card: UpdCardData): string[] {
-  const fixed = card.under_run_number_prefix.slice(0, 6).split("");
-  return [...fixed, card.upd_type, ...card.under_run_number_suffix.split("")];
+/** "السعودية" (as stored) → "Saudi Arabia / المملكة العربية السعودية", as printed in the reference. */
+function countryText(stored: string): string {
+  return stored === COMPANY.country_of_origin_ar ? `${COMPANY.country_of_origin_en} / ${CARD_TEXT.country_line.ar}` : stored;
+}
+
+/** "S/R" → one line per barrier: "Side Barrier / حاجز جانبي", "Rear Barrier / حاجز خلفي". */
+function updTypeLines(updType: string): string[] {
+  return updType.split("/").map((letter) => CARD_TEXT.upd_types[letter] ?? letter);
 }
 
 export function UpdCard({ card, qrSvg, ref }: Props) {
-  const cells = numberCells(card);
+  const vin = card.vehicle_chassis_number.split("");
+  const vinBoxes = Math.max(VIN_BOXES, vin.length);
+  const technicalReferences =
+    card.technical_references === DEFAULT_TECHNICAL_REFERENCES ? DEFAULT_TECHNICAL_REFERENCES_PRINTED : card.technical_references;
+  const footer = COMPANY.card_footer;
 
   return (
     <div ref={ref} className={s.card} data-upd-card>
-      <div className={s.qr} dangerouslySetInnerHTML={{ __html: qrSvg }} />
-
+      {/* ---------- header band: titles, card number/date, the client's name and logo ---------- */}
+      <div className={s.header} aria-hidden />
+      <div className={s.titleEn}>
+        {CARD_TEXT.title_en.map((line) => (
+          <div key={line}>{line}</div>
+        ))}
+      </div>
       <div lang="ar" className={s.titleAr}>
         {CARD_TEXT.title_ar}
       </div>
-      <div className={s.titleEn}>{CARD_TEXT.title_en}</div>
-      <div className={s.subtitle}>
-        {CARD_TEXT.manufacturer_section_en} <span lang="ar">{CARD_TEXT.manufacturer_section_ar}</span>
-      </div>
-
-      <img className={s.logo} src={COMPANY.logo_card_path} alt={COMPANY.name_en} />
-
-      <svg className={s.close} viewBox="0 0 12 12" aria-hidden>
-        <rect x="0.4" y="0.4" width="11.2" height="11.2" fill="#fff" stroke="#6b6b6b" strokeWidth="0.8" />
-        <path d="M3 3 L9.8 9.5 M9.8 3 L3 9.5" stroke="#e02121" strokeWidth="1.3" />
-      </svg>
-
-      <div className={s.table}>
-        <Row label="manufacturer_name">{card.manufacturer_name}</Row>
-        <Row label="manufacturer_code" tall>
-          {card.manufacturer_code}
-        </Row>
-        <Row label="country_of_origin">{card.country_of_origin}</Row>
-        <Row label="date_of_manufacture">{formatCardDate(card.date_of_manufacture)}</Row>
-        <Row label="technical_references">{card.technical_references}</Row>
-
-        <div className={s.sectionHeading}>
-          {CARD_TEXT.vehicle_section_en}&nbsp;<span lang="ar">{CARD_TEXT.vehicle_section_ar}</span>
+      <dl className={s.metaEn}>
+        <dt>{CARD_TEXT.card_number.en}</dt>
+        <dd>{card.card_number}</dd>
+        <dt>{CARD_TEXT.card_issue_date.en}</dt>
+        <dd>{formatDisplayDate(card.card_issue_date)}</dd>
+      </dl>
+      <dl lang="ar" dir="rtl" className={s.metaAr}>
+        <div>
+          <dt>{CARD_TEXT.card_number.ar} :</dt>
+          <dd dir="ltr">{card.card_number}</dd>
         </div>
-
-        <Row label="vehicle_model_name">{card.vehicle_model_name}</Row>
-        <Row label="vehicle_brand">{card.vehicle_brand}</Row>
-        <Row label="vehicle_model_year">{card.vehicle_model_year}</Row>
-        <Row label="upd_type" tall>
-          {card.upd_type}
-        </Row>
-        <Row label="vehicle_chassis_number" tall>
-          {card.vehicle_chassis_number}
-        </Row>
-
-        <div className={`${s.row} ${s.numberRow}`}>
-          <div className={`${s.label} ${s.labelEn}`}>{CARD_TEXT.rows.under_run_number.en}</div>
-          <div className={s.numberCell}>
-            <div className={s.cells}>
-              {cells.map((value, i) => (
-                // In the reference PDF cells 8 and 9 share one box (no gap between them).
-                <div key={i} className={`${s.cell} ${i === 7 ? s.joinedLeft : i === 8 ? s.joined : ""}`}>
-                  <div className={s.cellIndex}>{i + 1}</div>
-                  <div className={s.cellValue}>{value}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div lang="ar" className={`${s.label} ${s.labelAr}`}>
-            <span>
-              <ArabicLabel text={CARD_TEXT.rows.under_run_number.ar} />
-            </span>
-          </div>
+        <div>
+          <dt>{CARD_TEXT.card_issue_date.ar} :</dt>
+          <dd dir="ltr">{formatDisplayDate(card.card_issue_date)}</dd>
         </div>
-
-        <Row label="card_issue_date">{formatCardDate(card.card_issue_date)}</Row>
+      </dl>
+      <div className={s.brand}>
+        <img className={s.brandLogo} src={COMPANY.card_logo_path} alt="" />
+        <div lang="ar" className={s.brandAr}>
+          {COMPANY.name_ar}
+        </div>
+        <div className={s.brandEn}>{COMPANY.name_en}</div>
       </div>
 
-      <div className={s.rule} />
-      <div className={s.footerEn}>
-        {CARD_TEXT.footer_en.map((line) => (
-          <p key={line}>{line}</p>
-        ))}
+      {/* ---------- who issued the card ---------- */}
+      <div className={s.statement}>
+        <p>{CARD_TEXT.issuedBy_en(COMPANY.name_en)}</p>
+        <p lang="ar" dir="rtl">
+          {CARD_TEXT.issuedBy_ar(COMPANY.name_ar)}
+        </p>
       </div>
-      <div lang="ar" className={s.footerAr}>
-        {CARD_TEXT.footer_ar.map((line) => (
-          <p key={line}>{line}</p>
+      <img className={s.smallLogo} src={COMPANY.card_logo_path} alt={COMPANY.name_en} />
+      <img className={s.watermark} src={COMPANY.card_logo_path} alt="" aria-hidden />
+
+      {/* ---------- VIN, one character per box ---------- */}
+      <div className={s.vin}>
+        <div className={s.vinBoxes} style={{ gridTemplateColumns: `repeat(${vinBoxes}, 1fr)` }}>
+          {Array.from({ length: vinBoxes }, (_, i) => (
+            <div key={i}>{vin[i] ?? ""}</div>
+          ))}
+        </div>
+        <div className={`${s.label} ${s.vinLabel}`}>
+          <span lang="ar">{CARD_TEXT.vin.ar}</span>
+          <span>{CARD_TEXT.vin.en}</span>
+        </div>
+      </div>
+
+      {/* ---------- details grid ---------- */}
+      <Field field="manufacturer_name" col={0} row={0}>
+        {card.manufacturer_name}
+      </Field>
+      <Field field="manufacturer_code" col={1} row={0}>
+        {card.manufacturer_code}
+      </Field>
+      <Field field="country_of_origin" col={2} row={0}>
+        {countryText(card.country_of_origin)}
+      </Field>
+      <Field field="date_of_manufacture" col={0} row={1}>
+        {formatDisplayDate(card.date_of_manufacture)}
+      </Field>
+      <Field field="vehicle_model_name" col={1} row={1}>
+        {card.vehicle_model_name}
+      </Field>
+      <Field field="vehicle_brand" col={2} row={1}>
+        {card.vehicle_brand}
+      </Field>
+      <Field field="vehicle_model_year" col={0} row={2}>
+        {card.vehicle_model_year}
+      </Field>
+      <Field field="upd_type" col={1} row={2}>
+        {updTypeLines(card.upd_type).map((line) => (
+          <div key={line}>{line}</div>
         ))}
+      </Field>
+      <Field field="under_run_number" col={2} row={2}>
+        <span dir="ltr">{card.under_run_number_full}</span>
+      </Field>
+      <Field field="technical_references" col={0} row={3}>
+        {technicalReferences}
+      </Field>
+
+      <p className={s.validityEn}>{CARD_TEXT.validity_en}</p>
+      <p lang="ar" dir="rtl" className={s.validityAr}>
+        {CARD_TEXT.validity_ar}
+      </p>
+
+      {/* ---------- verification band with the QR code ---------- */}
+      <div className={s.verifyBand}>
+        <div className={s.verifyEn}>
+          {CARD_TEXT.verify_en.map((line) => (
+            <div key={line}>{line}</div>
+          ))}
+        </div>
+        <div lang="ar" dir="rtl" className={s.verifyAr}>
+          {CARD_TEXT.verify_ar.map((line) => (
+            <div key={line}>{line}</div>
+          ))}
+        </div>
+      </div>
+      <div className={s.qr} dangerouslySetInnerHTML={{ __html: qrSvg }} />
+
+      {/* ---------- issuer line and the client's contact footer ---------- */}
+      <div className={s.issuerBand}>
+        <span lang="ar" dir="rtl">
+          {CARD_TEXT.issuer_label.ar}: {COMPANY.name_ar}
+        </span>
+        <span>
+          {CARD_TEXT.issuer_label.en}: {COMPANY.name_en}
+        </span>
+      </div>
+      <div className={s.contacts}>
+        <div>
+          <span lang="ar">{CARD_TEXT.country_line.ar}</span>
+          <span>{CARD_TEXT.country_line.en}</span>
+        </div>
+        {(footer.address_ar || footer.address_en) && (
+          <div>
+            {footer.address_ar && <span lang="ar">{footer.address_ar}</span>}
+            {footer.address_en && <span>{footer.address_en}</span>}
+          </div>
+        )}
+        {(footer.phone || footer.fax) && (
+          <div dir="ltr">
+            {footer.phone && <span>T {footer.phone}</span>}
+            {footer.fax && <span>F {footer.fax}</span>}
+          </div>
+        )}
+        {(footer.website || footer.email) && (
+          <div className={s.links}>
+            {footer.website && <span>{footer.website}</span>}
+            {footer.email && <span>{footer.email}</span>}
+          </div>
+        )}
       </div>
     </div>
   );

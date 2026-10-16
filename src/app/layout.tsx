@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono, Noto_Nastaliq_Urdu, Noto_Sans, Noto_Sans_Arabic, Tajawal } from "next/font/google";
+import { Cairo, Inter, JetBrains_Mono, Noto_Nastaliq_Urdu, Noto_Sans, Noto_Sans_Arabic, Tajawal } from "next/font/google";
 import { cookies } from "next/headers";
 import { COMPANY } from "@/config/company";
 import { LanguageProvider } from "@/i18n/LanguageProvider";
@@ -47,6 +47,15 @@ const jetbrainsMono = JetBrains_Mono({
   preload: false,
 });
 
+// Font of the printed UPD card (Arabic + Latin), as in the client's reference PDF.
+// Not preloaded: only the card preview and the cards list (PDF export) use it.
+const cairo = Cairo({
+  variable: "--font-cairo",
+  subsets: ["arabic", "latin"],
+  weight: ["400", "600", "700"],
+  preload: false,
+});
+
 export const metadata: Metadata = {
   // Default tab title (English, the default UI language); <PageTitle> localizes it per page.
   title: `UPD Card System | ${COMPANY.name_en}`,
@@ -65,7 +74,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       lang={language}
       dir={directionOf(language)}
       suppressHydrationWarning
-      className={`${notoSans.variable} ${notoSansArabic.variable} ${notoNastaliqUrdu.variable} ${tajawal.variable} ${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`${notoSans.variable} ${notoSansArabic.variable} ${notoNastaliqUrdu.variable} ${tajawal.variable} ${inter.variable} ${jetbrainsMono.variable} ${cairo.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
         <LanguageProvider initialLanguage={language}>

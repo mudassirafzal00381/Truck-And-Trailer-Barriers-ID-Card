@@ -13,10 +13,22 @@ export const COMPANY = {
   logo_path: "/logo.png",
   // Square version (the triangle only), used as the browser tab icon.
   logo_mark_path: "/logo-mark.png",
-  // Smaller copy printed on the card (keeps downloaded PDFs light).
-  logo_card_path: "/logo-card.png",
+  // The client's own logo: printed on the card (header, small logo, faint watermark)
+  // and shown on the public record page. The SASO logo above is for the admin pages only.
+  // ⚠ Currently the gear logo from the client's reference PDF — replace if it isn't theirs.
+  card_logo_path: "/manufacturer-logo.png",
   // Not present in the reference PDF — fill in, e.g. ["+966 11 000 0000", "+966 50 000 0000"].
   contact_phones: [] as string[],
+  // Contact footer printed at the bottom of the card. Empty value = left out.
+  // ⚠ Placeholders — replace with the client's real address, phone, fax, website and email.
+  card_footer: {
+    address_ar: "",
+    address_en: "",
+    phone: "+966 00 000 0000",
+    fax: "",
+    website: "",
+    email: "info@example.com",
+  },
   // Public record page (what a scanned QR code opens): header name, footer contacts
   // and footer texts, as in the client's reference page. Empty contact = row hidden.
   // ⚠ The contact details below are the placeholders from the reference page —

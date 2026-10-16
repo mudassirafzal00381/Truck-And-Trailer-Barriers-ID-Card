@@ -42,7 +42,7 @@ export function RecordShell({ children, feedbackSubject }: { children: React.Rea
       <div className={s.sheet} dir="rtl" lang="ar">
         <header className={s.header}>
           <div className={s.brand}>
-            <img className={s.logo} src={COMPANY.logo_path} alt={COMPANY.name_en} />
+            <img className={s.logo} src={COMPANY.card_logo_path} alt={COMPANY.name_en} />
             <span>{page.brand}</span>
           </div>
           <h1 className={s.title}>{RECORD_TEXT.title}</h1>

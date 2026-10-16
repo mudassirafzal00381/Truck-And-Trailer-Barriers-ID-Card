@@ -47,9 +47,9 @@ html[lang="ur"] .text-xs {
 
 /* ---------- printing the official card ---------- */
 
-/* The card element opts into this page via `page: upd-card` (US Letter landscape, like the PDF). */
+/* The card element opts into this page via `page: upd-card` (A4 portrait, like the PDF). */
 @page upd-card {
-  size: letter landscape;
+  size: A4 portrait;
   margin: 0;
 }
 
