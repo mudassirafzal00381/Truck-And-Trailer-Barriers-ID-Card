@@ -46,6 +46,8 @@ export const RECORD_TEXT = {
     contact: "تواصل معنا",
     rights: "جميع الحقوق محفوظة.",
     switchLabel: "English",
+    beta: "تجريبي",
+    login: "تسجيل الدخول / التسجيل",
   },
   en: {
     cardTitle: "Barrier Unique ID Card",
@@ -79,10 +81,12 @@ export const RECORD_TEXT = {
     contact: "Contact Us",
     rights: "All rights reserved.",
     switchLabel: "عربي",
+    beta: "Beta",
+    login: "Login / Register",
   },
 } as const;
 
-/** Page frame: the company header with the language switch, the given content, and the footer. */
+/** Page frame: the Saudi Standards header with the language switch, the given content, and the footer. */
 export function RecordShell({ lang, children }: { lang: RecordLang; children: React.ReactNode }) {
   const t = RECORD_TEXT[lang];
   const contacts = COMPANY.record_page;
@@ -92,16 +96,22 @@ export function RecordShell({ lang, children }: { lang: RecordLang; children: Re
       <header className={s.header}>
         <div className={s.headerInner}>
           <div className={s.brand}>
-            <img className={s.logo} src={COMPANY.card_logo_path} alt="" />
-            <div className={s.brandNames}>
-              <strong lang="ar">{COMPANY.name_ar}</strong>
-              <span lang="en">{COMPANY.name_en}</span>
-            </div>
+            <span className={s.menuIcon} aria-hidden="true">
+              <MenuIcon />
+            </span>
+            <img className={s.logo} src={COMPANY.logo_path} alt="Saudi Standards — SASO" />
           </div>
-          <a className={s.langSwitch} href={`?lang=${lang === "ar" ? "en" : "ar"}`} lang={lang === "ar" ? "en" : "ar"}>
-            <GlobeIcon />
-            {t.switchLabel}
-          </a>
+          <nav className={s.headerActions}>
+            <span className={s.beta}>{t.beta}</span>
+            <a className={s.headerLink} href={`?lang=${lang === "ar" ? "en" : "ar"}`} lang={lang === "ar" ? "en" : "ar"}>
+              <TranslateIcon />
+              <span className={s.headerLinkText}>{t.switchLabel}</span>
+            </a>
+            <a className={s.headerLink} href="/login">
+              <UserIcon />
+              <span className={s.headerLinkText}>{t.login}</span>
+            </a>
+          </nav>
         </div>
       </header>
 
@@ -153,11 +163,31 @@ export function Item({ label, children, ltr }: { label: string; children: React.
 
 const iconProps = { viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.8, "aria-hidden": true } as const;
 
-function GlobeIcon() {
+function MenuIcon() {
   return (
     <svg {...iconProps}>
-      <circle cx="12" cy="12" r="9" />
-      <path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3Z" />
+      <path d="M4 6h16M4 12h16M4 18h16" />
+    </svg>
+  );
+}
+
+/** The "translate" glyph next to the language switch: an "文" box and an "A" box overlapping. */
+function TranslateIcon() {
+  return (
+    <svg {...iconProps}>
+      <rect x="2.5" y="2.5" width="11" height="11" rx="2" />
+      <rect x="10.5" y="10.5" width="11" height="11" rx="2" fill="#fff" />
+      <path d="M5 6h6M8 5v1M10 6c-.5 2-2 3.5-4 4.5M6.5 7.5c.8 1.3 2 2.3 3.5 3" />
+      <path d="M13.5 19l2.5-6 2.5 6M14.4 17h3.2" />
+    </svg>
+  );
+}
+
+function UserIcon() {
+  return (
+    <svg {...iconProps}>
+      <circle cx="12" cy="8" r="4" />
+      <path d="M4 21c0-3.9 3.6-6.5 8-6.5s8 2.6 8 6.5Z" />
     </svg>
   );
 }
