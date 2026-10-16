@@ -39,7 +39,7 @@ type Props = {
 
 type FieldKey = keyof typeof CARD_TEXT.fields;
 
-/** Grid geometry from the reference PDF (pt): three columns, four rows. */
+/** Grid geometry from the reference PDF (pt): three columns, four rows (outline paths). */
 const COLUMN_LEFT = [16, 206.3, 396.7];
 const ROWS = [
   { top: 247.5, height: 30.5 },
@@ -48,12 +48,16 @@ const ROWS = [
   { top: 368.2, height: 64.2 },
 ];
 const VIN_BOXES = 17;
+/** Distance between the first and last VIN box lines (17 boxes × 27.2pt). */
+const VIN_ROW_WIDTH = 462.4;
 
 function Field({ field, col, row, children }: { field: FieldKey; col: number; row: number; children: React.ReactNode }) {
   const label = CARD_TEXT.fields[field];
   const { top, height } = ROWS[row];
   return (
-    <div className={s.field} style={{ left: `${COLUMN_LEFT[col]}pt`, top: `${top}pt`, height: `${height}pt` }}>
+    // The reference strokes each box's outline centred on these coordinates; the
+    // CSS border sits inside the box, so the box is 0.5pt larger on every side.
+    <div className={s.field} style={{ left: `${COLUMN_LEFT[col] - 0.5}pt`, top: `${top - 0.5}pt`, height: `${height + 1}pt` }}>
       <div className={s.value}>{children}</div>
       <div className={s.label}>
         <span lang="ar">{label.ar}</span>
@@ -83,7 +87,10 @@ export function UpdCard({ card, qrSvg, ref }: Props) {
   return (
     <div ref={ref} className={s.card} data-upd-card>
       {/* ---------- header band: titles, card number/date, the client's name and logo ---------- */}
-      <div className={s.header} aria-hidden />
+      <div className={s.header} aria-hidden>
+        {/* soft decorative shapes, placed as in the reference */}
+        <i /><i /><i /><i /><i /><i />
+      </div>
       <div className={s.titleEn}>
         {CARD_TEXT.title_en.map((line) => (
           <div key={line}>{line}</div>
@@ -98,22 +105,26 @@ export function UpdCard({ card, qrSvg, ref }: Props) {
         <dt>{CARD_TEXT.card_issue_date.en}</dt>
         <dd>{formatDisplayDate(card.card_issue_date)}</dd>
       </dl>
-      <dl lang="ar" dir="rtl" className={s.metaAr}>
-        <div>
-          <dt>{CARD_TEXT.card_number.ar} :</dt>
-          <dd dir="ltr">{card.card_number}</dd>
-        </div>
-        <div>
-          <dt>{CARD_TEXT.card_issue_date.ar} :</dt>
-          <dd dir="ltr">{formatDisplayDate(card.card_issue_date)}</dd>
-        </div>
+      {/* Values in a right-aligned column, labels in a left-aligned one, as in the reference. */}
+      <dl className={s.metaAr}>
+        <dd>{card.card_number}</dd>
+        <dt lang="ar" dir="rtl">
+          {CARD_TEXT.card_number.ar}:
+        </dt>
+        <dd>{formatDisplayDate(card.card_issue_date)}</dd>
+        <dt lang="ar" dir="rtl">
+          {CARD_TEXT.card_issue_date.ar}:
+        </dt>
       </dl>
+      {/* The client's name and logo side by side, centred in the band. */}
       <div className={s.brand}>
-        <img className={s.brandLogo} src={COMPANY.card_logo_path} alt="" />
-        <div lang="ar" className={s.brandAr}>
-          {COMPANY.name_ar}
+        <div className={s.brandNames}>
+          <div lang="ar" className={s.brandAr}>
+            {COMPANY.name_ar}
+          </div>
+          <div className={s.brandEn}>{COMPANY.name_en}</div>
         </div>
-        <div className={s.brandEn}>{COMPANY.name_en}</div>
+        <img className={s.brandLogo} src={COMPANY.card_logo_path} alt="" />
       </div>
 
       {/* ---------- who issued the card ---------- */}
@@ -128,7 +139,7 @@ export function UpdCard({ card, qrSvg, ref }: Props) {
 
       {/* ---------- VIN, one character per box ---------- */}
       <div className={s.vin}>
-        <div className={s.vinBoxes} style={{ gridTemplateColumns: `repeat(${vinBoxes}, 1fr)` }}>
+        <div className={s.vinBoxes} style={{ "--vin-cell": `${(VIN_ROW_WIDTH / vinBoxes).toFixed(3)}pt` } as React.CSSProperties}>
           {Array.from({ length: vinBoxes }, (_, i) => (
             <div key={i}>{vin[i] ?? ""}</div>
           ))}

@@ -46,38 +46,74 @@
   width: 595pt;
   height: 110.7pt;
   overflow: hidden;
+}
+
+.header {
   background: #eaf5f7;
 }
 
-/* Soft decorative shapes, in the band's own colours. */
-.header::before,
-.header::after {
-  content: "";
+/* Soft decorative shapes at the reference's positions, in the band's own teal
+   tones. Solid shapes, not gradients: Chrome prints gradients with ragged edges. */
+.header > i {
   position: absolute;
-}
-
-.header::before {
-  right: 0;
-  bottom: 0;
-  width: 150pt;
-  height: 80pt;
-  background: #d5edf1;
-  clip-path: polygon(100% 0, 100% 100%, 0 100%);
-}
-
-.header::after {
-  left: 150pt;
-  top: -40pt;
-  width: 80pt;
-  height: 80pt;
   border-radius: 50%;
-  background: #e1f1f4;
+}
+
+.header > i:nth-child(1) {
+  left: 52pt;
+  top: 15.5pt;
+  width: 19pt;
+  height: 20.5pt;
+  background: #e2e6e4;
+}
+
+.header > i:nth-child(2) {
+  left: 34pt;
+  top: 70pt;
+  width: 21pt;
+  height: 22pt;
+  background: #e3f1f3;
+}
+
+.header > i:nth-child(3) {
+  left: 241pt;
+  top: -12pt;
+  width: 38pt;
+  height: 42pt;
+  background: #dfe9ec;
+}
+
+.header > i:nth-child(4) {
+  left: 167pt;
+  top: 72pt;
+  width: 43pt;
+  height: 52pt;
+  background: #dcefee;
+}
+
+.header > i:nth-child(5) {
+  left: 391pt;
+  top: -14pt;
+  width: 68pt;
+  height: 36pt;
+  background: #dcefed;
+}
+
+/* large triangle, bottom right */
+.header > i:nth-child(6) {
+  left: 505pt;
+  top: 9pt;
+  width: 90pt;
+  height: 102pt;
+  border-radius: 0;
+  background: #d3ebf0;
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
 }
 
 .titleEn,
 .titleAr {
   position: absolute;
-  top: 14.75pt;
+  top: 15.75pt;
   font-size: 10pt;
   font-weight: 700;
   line-height: 18.7pt;
@@ -102,19 +138,26 @@
 
 .metaEn {
   left: 16pt;
-  top: 60.4pt;
+  top: 60.8pt;
   display: grid;
   grid-template-columns: 81pt auto;
 }
 
+/* Values end at x = 509.5pt; labels start at x = 517.5pt (and may run to the margin). */
 .metaAr {
   right: 16pt;
-  top: 41.6pt;
+  top: 41.9pt;
+  display: grid;
+  grid-template-columns: auto 61.5pt;
+  column-gap: 8pt;
 }
 
-.metaAr > div {
-  display: flex;
-  gap: 4pt;
+.metaAr dd {
+  text-align: right;
+}
+
+.metaAr dt {
+  text-align: left;
 }
 
 .metaEn dd,
@@ -122,36 +165,45 @@
   color: #7f5a26;
 }
 
-/* The client's logo and name, centred in the band. */
+/* The client's names and logo side by side, centred in the band where the
+   reference has its issuer's lockup (x 214–381pt, y 31–80pt). */
 .brand {
   position: absolute;
-  left: 197.5pt;
-  top: 14pt;
-  width: 200pt;
+  left: 0;
+  top: 31pt;
+  width: 595pt;
+  height: 49pt;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8pt;
+}
+
+.brandNames {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
+  align-items: flex-end;
+  text-align: right;
+  white-space: nowrap;
 }
 
 .brandLogo {
-  height: 40pt;
+  height: 49pt;
   width: auto;
-  margin-bottom: 3pt;
 }
 
 .brandAr {
-  color: #0e4f5d;
-  font-size: 9pt;
+  color: #58585a;
+  font-size: 14pt;
   font-weight: 700;
-  line-height: 14pt;
+  line-height: 21pt;
 }
 
 .brandEn {
   color: #58585a;
-  font-size: 7pt;
+  font-size: 11pt;
   font-weight: 600;
-  line-height: 11pt;
+  line-height: 17pt;
 }
 
 /* ---------- issued-by statement, logo and watermark ---------- */
@@ -162,7 +214,7 @@
   top: 122pt;
   width: 563pt;
   height: 30.5pt;
-  padding: 0 4pt;
+  padding: 2.4pt 4pt 0;
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -186,6 +238,10 @@
   top: 158.5pt;
   width: 57.1pt;
   height: 45pt;
+  /* Framed like the reference: a hairline rule on top, the logo inset at 529.2/161.5pt, 35.8 × 37.6pt. */
+  border-top: 0.25pt solid #a1a2b6;
+  padding: 2.75pt 14pt 4.4pt 7.3pt;
+  box-sizing: border-box;
   object-fit: contain;
 }
 
@@ -209,28 +265,44 @@
   border: 1pt solid #d3ebf0;
 }
 
-/* Teal label cell on the right of each box (covers the box's own border there). */
+/*
+ * Boxes are 0.5pt larger on every side than the reference's outline paths (the
+ * reference strokes centred on the path, CSS borders sit inside the box), so the
+ * inner edge of each border is at reference + 0.5pt.
+ *
+ * `--text-dy` lowers the text in a box so its baselines land where the reference
+ * puts them (Chrome sets Cairo about 1pt higher in the line box than the original).
+ */
+.vin,
+.field {
+  --text-dy: 2.4pt;
+}
+
+/* Teal label cell on the right of each box, text right-aligned 4pt from the outline. */
 .label {
   position: absolute;
-  top: -1pt;
-  right: -1pt;
-  bottom: -1pt;
-  width: 93pt;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 92.5pt;
+  padding: var(--text-dy) 3.8pt 0 0;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   background: #eaf5f7;
   color: #0e4f5d;
-  text-align: center;
+  text-align: right;
   white-space: pre-line;
 }
 
 .vin {
-  left: 16pt;
-  top: 209.5pt;
-  width: 563pt;
-  height: 32pt;
+  left: 15.5pt;
+  top: 209pt;
+  width: 564pt;
+  height: 33pt;
+  --text-dy: 0.6pt;
 }
 
 .vinLabel {
@@ -238,40 +310,43 @@
   line-height: 11.3pt;
 }
 
+/* Box k's outline is centred on x = 20 + 27.2k (pt), y 213.5–237.5, like the reference. */
 .vinBoxes {
   position: absolute;
   left: 3pt;
   top: 3pt;
-  width: 462pt;
-  height: 24pt;
-  display: grid;
+  height: 25pt;
+  display: flex;
 }
 
 .vinBoxes > div {
+  flex: none;
+  width: calc(var(--vin-cell) + 1pt);
   box-sizing: border-box;
   border: 1pt solid #d3ebf0;
-  border-left: none;
+  padding-top: 0.75pt;
   font-size: 11pt;
   font-weight: 700;
   line-height: 22pt;
   text-align: center;
 }
 
-.vinBoxes > div:first-child {
-  border-left: 1pt solid #d3ebf0;
+.vinBoxes > div + div {
+  margin-left: -1pt;
 }
 
 .field {
-  width: 182.3pt;
+  width: 183.3pt;
 }
 
+/* Value cell: between the outline and the label, centred, 6.3pt side padding. */
 .value {
   position: absolute;
   left: 0;
   top: 0;
   bottom: 0;
-  width: 89.3pt;
-  padding: 0 3pt;
+  width: 88.8pt;
+  padding: var(--text-dy) 6pt 0 6pt;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -286,7 +361,7 @@
 .validityEn,
 .validityAr {
   position: absolute;
-  top: 442.45pt;
+  top: 443.25pt;
   color: #58585a;
   white-space: nowrap;
 }
@@ -305,7 +380,7 @@
   top: 737.8pt;
   width: 563pt;
   height: 35pt;
-  padding: 0 8pt 0 10pt;
+  padding: 1pt 8pt 0 10pt;
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -344,6 +419,8 @@
   top: 787.8pt;
   width: 595pt;
   height: 17.2pt;
+  padding-top: 2.5pt;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -358,7 +435,7 @@
   top: 805pt;
   width: 595pt;
   height: 37pt;
-  padding-top: 7.35pt; /* first line's baseline at 820.3pt, as in the reference */
+  padding-top: 8.65pt; /* first line's baseline at 820.3pt, as in the reference */
   box-sizing: border-box;
   display: flex;
   justify-content: center;
@@ -379,7 +456,7 @@
   content: "";
   position: absolute;
   left: 0;
-  top: 2.65pt;
+  top: 1.35pt; /* separators span y 815–832pt */
   width: 1pt;
   height: 17pt;
   background: #d2d2d2;
