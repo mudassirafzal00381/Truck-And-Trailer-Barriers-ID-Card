@@ -116,15 +116,9 @@ export function UpdCard({ card, qrSvg, ref }: Props) {
           {CARD_TEXT.card_issue_date.ar}:
         </dt>
       </dl>
-      {/* The client's name and logo side by side, centred in the band. */}
+      {/* The official SASO logo centred in the header band. */}
       <div className={s.brand}>
-        <div className={s.brandNames}>
-          <div lang="ar" className={s.brandAr}>
-            {COMPANY.name_ar}
-          </div>
-          <div className={s.brandEn}>{COMPANY.name_en}</div>
-        </div>
-        <img className={s.brandLogo} src={COMPANY.card_logo_path} alt="" />
+        <img className={s.brandLogo} src={COMPANY.logo_path} alt="المواصفات السعودية / Saudi Standards" />
       </div>
 
       {/* ---------- who issued the card ---------- */}
@@ -135,7 +129,7 @@ export function UpdCard({ card, qrSvg, ref }: Props) {
         </p>
       </div>
       <img className={s.smallLogo} src={COMPANY.card_logo_path} alt={COMPANY.name_en} />
-      <img className={s.watermark} src={COMPANY.card_logo_path} alt="" aria-hidden />
+      <img className={s.watermark} src={COMPANY.logo_mark_path} alt="" aria-hidden />
 
       {/* ---------- VIN, one character per box ---------- */}
       <div className={s.vin}>

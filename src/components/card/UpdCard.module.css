@@ -165,8 +165,7 @@
   color: #7f5a26;
 }
 
-/* The client's names and logo side by side, centred in the band where the
-   reference has its issuer's lockup (x 214–381pt, y 31–80pt). */
+/* SASO logo centred in the band (x 214–381pt, y 31–80pt). */
 .brand {
   position: absolute;
   left: 0;
@@ -176,34 +175,13 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 8pt;
-}
-
-.brandNames {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  text-align: right;
-  white-space: nowrap;
 }
 
 .brandLogo {
-  height: 49pt;
+  height: 46pt;
   width: auto;
-}
-
-.brandAr {
-  color: #58585a;
-  font-size: 14pt;
-  font-weight: 700;
-  line-height: 21pt;
-}
-
-.brandEn {
-  color: #58585a;
-  font-size: 11pt;
-  font-weight: 600;
-  line-height: 17pt;
+  max-width: 220pt;
+  object-fit: contain;
 }
 
 /* ---------- issued-by statement, logo and watermark ---------- */
@@ -248,11 +226,11 @@
 .watermark {
   position: absolute;
   left: 147.5pt;
-  top: 300pt;
+  top: 295pt;
   width: 300pt;
-  height: 293.1pt;
+  height: 300pt;
   object-fit: contain;
-  opacity: 0.04;
+  opacity: 0.08;
   pointer-events: none;
 }
 
