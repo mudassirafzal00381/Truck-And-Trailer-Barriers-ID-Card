@@ -33,6 +33,8 @@ export const COMPANY = {
     // Shown next to the manufacturer code in the summary panel. Empty = left out.
     address_en: "Building 5187, Al Mariad 6, Al Maarid Dist., KHAMIS MUSHAYT, 62451, Saudi Arabia",
     address_ar: "مبنى 5187، المعارض 6، حي المعارض، خميس مشيط، 62451، المملكة العربية السعودية",
+    home_url: "https://maneh.saso.gov.sa/en/",
+    ase_login_url: "https://maneh.saso.gov.sa/en/auth/authorizedStudyEntity/login",
     faq_url: "",
     terms_url: "https://www.saso.gov.sa/en/privacy_policy/Pages/default.aspx",
     social: {

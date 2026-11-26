@@ -52,6 +52,8 @@ export const RECORD_TEXT = {
     copyrightPrefix: "جميع الحقوق محفوظة 2026.",
     copyrightBrand: "المواصفات السعودية.",
     switchLabel: "English",
+    home: "الرئيسية",
+    loginAsAse: "تسجيل الدخول كجهة دراسة معتمدة",
     beta: "تجريبي",
     login: "تسجيل الدخول / التسجيل",
   },
@@ -93,6 +95,8 @@ export const RECORD_TEXT = {
     copyrightPrefix: "Copyright 2026.",
     copyrightBrand: "SASO Standards.",
     switchLabel: "عربي",
+    home: "Home",
+    loginAsAse: "Login as ASE",
     beta: "Beta",
     login: "Login / Register",
   },
@@ -113,7 +117,15 @@ export function RecordShell({ lang, children }: { lang: RecordLang; children: Re
             </span>
             <img className={s.logo} src={COMPANY.logo_path} alt="Saudi Standards — SASO" />
           </div>
-          <nav className={s.headerActions}>
+          <nav className={s.headerNav}>
+            <a className={s.navLink} href={links.home_url} target="_blank" rel="noopener noreferrer">
+              {t.home}
+            </a>
+            <a className={s.navLink} href={links.ase_login_url} target="_blank" rel="noopener noreferrer">
+              {t.loginAsAse}
+            </a>
+          </nav>
+          <div className={s.headerActions}>
             <span className={s.beta}>{t.beta}</span>
             <a className={s.headerLink} href={`?lang=${lang === "ar" ? "en" : "ar"}`} lang={lang === "ar" ? "en" : "ar"}>
               <TranslateIcon />
@@ -123,7 +135,7 @@ export function RecordShell({ lang, children }: { lang: RecordLang; children: Re
               <UserIcon />
               <span className={s.headerLinkText}>{t.login}</span>
             </a>
-          </nav>
+          </div>
         </div>
       </header>
 

@@ -45,6 +45,28 @@
   min-width: 0;
 }
 
+.headerNav {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+  margin-inline-start: 1.5rem;
+  margin-inline-end: auto;
+}
+
+.navLink {
+  color: #1c2833;
+  font-size: 1.05rem;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.15s;
+}
+
+.navLink:hover {
+  color: var(--saso-green);
+  text-decoration: underline;
+}
+
 .menuIcon {
   display: inline-flex;
   flex: none;
@@ -443,6 +465,24 @@ a.socialButton:hover {
 }
 
 /* ---------- smaller screens ---------- */
+
+@media (max-width: 960px) {
+  .headerInner {
+    flex-wrap: wrap;
+    row-gap: 0.65rem;
+  }
+  .headerNav {
+    order: 3;
+    flex-basis: 100%;
+    margin: 0;
+    padding-top: 0.65rem;
+    border-top: 1px solid var(--line);
+    gap: 1.25rem;
+  }
+  .navLink {
+    font-size: 0.95rem;
+  }
+}
 
 @media (max-width: 760px) {
   .summaryGrid {
