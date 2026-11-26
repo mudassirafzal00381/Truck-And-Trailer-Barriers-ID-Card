@@ -35,7 +35,7 @@ export const COMPANY = {
     address_ar: "مبنى 5187، المعارض 6، حي المعارض، خميس مشيط، 62451، المملكة العربية السعودية",
     home_url: "https://maneh.saso.gov.sa/en/",
     ase_login_url: "https://maneh.saso.gov.sa/en/auth/authorizedStudyEntity/login",
-    faq_url: "",
+    faq_url: "https://www.saso.gov.sa/en/faq/pages/default.aspx",
     terms_url: "https://www.saso.gov.sa/en/privacy_policy/Pages/default.aspx",
     social: {
       x: "https://x.com/SASOGOV",
