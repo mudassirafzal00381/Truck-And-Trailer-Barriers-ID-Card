@@ -25,6 +25,21 @@ export async function downloadCardPdf(cardEl: HTMLElement, card: { card_number: 
   const pdf = new jsPDF({ orientation: "portrait", unit: "pt", format: [PAGE_WIDTH_PT, PAGE_HEIGHT_PT], compress: true });
   pdf.setProperties({ title });
   pdf.addImage(png, "PNG", 0, 0, PAGE_WIDTH_PT, PAGE_HEIGHT_PT, undefined, "FAST");
+
+  // Preserve clickable links (e.g. website and email in the card footer) over the rasterized card.
+  const cardRect = cardEl.getBoundingClientRect();
+  if (cardRect.width > 0 && cardRect.height > 0) {
+    for (const anchor of cardEl.querySelectorAll<HTMLAnchorElement>("a[href]")) {
+      const rect = anchor.getBoundingClientRect();
+      if (rect.width <= 0 || rect.height <= 0) continue;
+      const x = ((rect.left - cardRect.left) / cardRect.width) * PAGE_WIDTH_PT;
+      const y = ((rect.top - cardRect.top) / cardRect.height) * PAGE_HEIGHT_PT;
+      const w = (rect.width / cardRect.width) * PAGE_WIDTH_PT;
+      const h = (rect.height / cardRect.height) * PAGE_HEIGHT_PT;
+      pdf.link(x, y, w, h, { url: anchor.href });
+    }
+  }
+
   pdf.save(fileName);
 }
 

@@ -49,6 +49,8 @@ export const RECORD_TEXT = {
     faq: "الأسئلة الشائعة",
     terms: "الشروط والأحكام",
     social: "وسائل التواصل الاجتماعي",
+    copyrightPrefix: "جميع الحقوق محفوظة 2026.",
+    copyrightBrand: "المواصفات السعودية.",
     switchLabel: "English",
     beta: "تجريبي",
     login: "تسجيل الدخول / التسجيل",
@@ -88,6 +90,8 @@ export const RECORD_TEXT = {
     faq: "Frequently Asked Questions",
     terms: "Terms & Conditions",
     social: "Social Media",
+    copyrightPrefix: "Copyright 2026.",
+    copyrightBrand: "SASO Standards.",
     switchLabel: "عربي",
     beta: "Beta",
     login: "Login / Register",
@@ -127,26 +131,31 @@ export function RecordShell({ lang, children }: { lang: RecordLang; children: Re
 
       <footer className={s.footer}>
         <div className={s.footerInner}>
-          <div className={s.footerCol}>
-            <h2>{t.support}</h2>
-            <FooterLink href={links.faq_url}>{t.faq}</FooterLink>
+          <div className={s.footerColumns}>
+            <div className={s.footerCol}>
+              <h2>{t.support}</h2>
+              <FooterLink href={links.faq_url}>{t.faq}</FooterLink>
+            </div>
+            <div className={s.footerCol}>
+              <h2>{t.terms}</h2>
+              <FooterLink href={links.terms_url}>{t.terms}</FooterLink>
+            </div>
+            <div className={s.footerCol}>
+              <h2>{t.social}</h2>
+              <ul className={s.socials}>
+                {SOCIALS.map(({ key, label, Icon }) => (
+                  <li key={key}>
+                    <FooterLink href={links.social[key]} className={s.socialButton} label={label}>
+                      <Icon />
+                    </FooterLink>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
-          <div className={s.footerCol}>
-            <h2>{t.terms}</h2>
-            <FooterLink href={links.terms_url}>{t.terms}</FooterLink>
-          </div>
-          <div className={s.footerCol}>
-            <h2>{t.social}</h2>
-            <ul className={s.socials}>
-              {SOCIALS.map(({ key, label, Icon }) => (
-                <li key={key}>
-                  <FooterLink href={links.social[key]} className={s.socialButton} label={label}>
-                    <Icon />
-                  </FooterLink>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <p className={s.copyright}>
+            {t.copyrightPrefix} <strong>{t.copyrightBrand}</strong>
+          </p>
         </div>
       </footer>
     </div>

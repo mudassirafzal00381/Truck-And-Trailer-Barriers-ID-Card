@@ -198,23 +198,26 @@ export function UpdCard({ card, qrSvg, ref }: Props) {
       </div>
       <div className={s.qr} dangerouslySetInnerHTML={{ __html: qrSvg }} />
 
-      {/* ---------- issuer line and the client's contact footer ---------- */}
+      {/* ---------- regulatory notice band and contact footer ---------- */}
       <div className={s.issuerBand}>
         <span lang="ar" dir="rtl">
-          {CARD_TEXT.issuer_label.ar}: {COMPANY.name_ar}
-        </span>
-        <span>
-          {CARD_TEXT.issuer_label.en}: {COMPANY.name_en}
+          {CARD_TEXT.footer_notice_ar}
         </span>
       </div>
       <div className={s.contacts}>
         <div>
-          <span lang="ar">{CARD_TEXT.country_line.ar}</span>
+          <span lang="ar" dir="rtl">
+            {CARD_TEXT.country_line.ar}
+          </span>
           <span>{CARD_TEXT.country_line.en}</span>
         </div>
         {(footer.address_ar || footer.address_en) && (
           <div>
-            {footer.address_ar && <span lang="ar">{footer.address_ar}</span>}
+            {footer.address_ar && (
+              <span lang="ar" dir="rtl">
+                {footer.address_ar}
+              </span>
+            )}
             {footer.address_en && <span>{footer.address_en}</span>}
           </div>
         )}
@@ -226,8 +229,16 @@ export function UpdCard({ card, qrSvg, ref }: Props) {
         )}
         {(footer.website || footer.email) && (
           <div className={s.links}>
-            {footer.website && <span>{footer.website}</span>}
-            {footer.email && <span>{footer.email}</span>}
+            {footer.website && (
+              <a
+                href={/^https?:\/\//i.test(footer.website) ? footer.website : `https://${footer.website}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {footer.website}
+              </a>
+            )}
+            {footer.email && <a href={`mailto:${footer.email}`}>{footer.email}</a>}
           </div>
         )}
       </div>

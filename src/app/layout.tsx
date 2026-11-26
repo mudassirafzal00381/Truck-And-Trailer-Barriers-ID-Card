@@ -31,7 +31,7 @@ const notoNastaliqUrdu = Noto_Nastaliq_Urdu({
 const plexArabic = IBM_Plex_Sans_Arabic({
   variable: "--font-record",
   subsets: ["arabic", "latin"],
-  weight: ["400", "500", "600"],
+  weight: ["400", "500", "600", "700"],
   preload: false,
 });
 

@@ -19,30 +19,28 @@ export const COMPANY = {
   // Not present in the reference PDF — fill in, e.g. ["+966 11 000 0000", "+966 50 000 0000"].
   contact_phones: [] as string[],
   // Contact footer printed at the bottom of the card. Empty value = left out.
-  // ⚠ Placeholders — replace with the client's real address, phone, fax, website and email.
   card_footer: {
-    address_ar: "",
-    address_en: "",
-    phone: "+966 00 000 0000",
-    fax: "",
-    website: "",
-    email: "info@example.com",
+    address_ar: "ص . ب 3437 الرياض 11471",
+    address_en: "P.O.Box 3437 Riyadh 11471",
+    phone: "8001160000",
+    fax: "0114520086",
+    website: "www.saso.gov.sa",
+    email: "info@saso.gov.sa",
   },
   // Public record page (what a scanned QR code opens): link targets in its footer.
   // Empty value = the item is still shown, just not clickable.
-  // ⚠ Fill in the real addresses before handing cards to customers.
   record_page: {
     // Shown next to the manufacturer code in the summary panel. Empty = left out.
     address_en: "Building 5187, Al Mariad 6, Al Maarid Dist., KHAMIS MUSHAYT, 62451, Saudi Arabia",
     address_ar: "مبنى 5187، المعارض 6، حي المعارض، خميس مشيط، 62451، المملكة العربية السعودية",
     faq_url: "",
-    terms_url: "",
+    terms_url: "https://www.saso.gov.sa/en/privacy_policy/Pages/default.aspx",
     social: {
-      x: "",
-      facebook: "",
-      youtube: "",
-      snapchat: "",
-      instagram: "",
+      x: "https://x.com/SASOGOV",
+      facebook: "https://www.facebook.com/SASOGOV",
+      youtube: "https://www.youtube.com/user/sasogov",
+      snapchat: "https://www.snapchat.com/@sasogov",
+      instagram: "https://www.instagram.com/sasogov",
     },
   },
   // Shown on the QR page when a card has no uploaded side / rear picture. Replace

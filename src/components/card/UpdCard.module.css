@@ -430,6 +430,11 @@
   padding: 0 9pt;
 }
 
+.contacts span,
+.contacts a {
+  text-align: left;
+}
+
 .contacts > div + div::before {
   content: "";
   position: absolute;
@@ -442,4 +447,13 @@
 
 .links {
   color: #0096b7;
+}
+
+.links a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.links a:hover {
+  text-decoration: underline;
 }
