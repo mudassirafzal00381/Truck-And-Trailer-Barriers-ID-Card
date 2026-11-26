@@ -58,10 +58,15 @@ export const RECORD_TEXT = {
     loginAsAse: "تسجيل الدخول كجهة دراسة معتمدة",
     govBanner: "موقع حكومي رسمي لحكومة المملكة العربية السعودية",
     howToVerify: "كيف تتحقق",
-    verifyDomainTitle: "روابط المواقع الرسمية تنتهي بـ .gov.sa",
-    verifyDomainDesc: "جميع المواقع الحكومية الرسمية في المملكة العربية السعودية تنتهي بالنطاق .gov.sa.",
-    verifyHttpsTitle: "المواقع الحكومية آمنة ومشفّرة (HTTPS)",
-    verifyHttpsDesc: "وجود رمز القفل أو https:// يعني أن اتصالك بالموقع آمن ومشفّر.",
+    verifyDomainBefore: "روابط المواقع الرسمية تنتهي بـ ",
+    verifyDomainHighlight: "gov.sa",
+    verifyDomainAfter: "",
+    verifyDomainDesc: "جميع روابط المواقع الرسمية للجهات الحكومية في المملكة العربية السعودية تنتهي بـ gov.sa.",
+    verifyHttpsBefore: "تستخدم المواقع الحكومية بروتوكول ",
+    verifyHttpsHighlight: "HTTPS",
+    verifyHttpsAfter: " للتشفير والأمان.",
+    verifyHttpsDesc: "تستخدم المواقع الآمنة في المملكة العربية السعودية بروتوكول HTTPS للتشفير.",
+    dgaRegisteredLabel: "مسجّل لدى هيئة الحكومة الرقمية برقم:",
     beta: "تجريبي",
     login: "تسجيل الدخول / التسجيل",
   },
@@ -108,10 +113,15 @@ export const RECORD_TEXT = {
     loginAsAse: "Login as ASE",
     govBanner: "Official government website of the Government of the Kingdom of Saudi Arabia",
     howToVerify: "How to verify",
-    verifyDomainTitle: "Official websites use .gov.sa",
-    verifyDomainDesc: "Official websites of the Government of the Kingdom of Saudi Arabia end in .gov.sa.",
-    verifyHttpsTitle: "Official websites use HTTPS",
-    verifyHttpsDesc: "A lock icon or https:// means your connection to the website is secure and encrypted.",
+    verifyDomainBefore: "Links to official Saudi websites end with ",
+    verifyDomainHighlight: "gov.sa",
+    verifyDomainAfter: "",
+    verifyDomainDesc: "All links to official websites of government agencies in the Kingdom of Saudi Arabia end with gov.sa.",
+    verifyHttpsBefore: "Government websites use the ",
+    verifyHttpsHighlight: "HTTPS",
+    verifyHttpsAfter: " protocol for encryption and security.",
+    verifyHttpsDesc: "Secure websites in the Kingdom of Saudi Arabia use the HTTPS protocol for encryption.",
+    dgaRegisteredLabel: "Registered with the Digital Government Authority under number:",
     beta: "Beta",
     login: "Login / Register",
   },
@@ -140,13 +150,46 @@ export function RecordShell({ lang, children }: { lang: RecordLang; children: Re
               </span>
             </summary>
             <div className={s.govPanel}>
-              <div className={s.govPanelItem}>
-                <strong>{t.verifyDomainTitle}</strong>
-                <p>{t.verifyDomainDesc}</p>
+              <div className={s.govPanelGrid}>
+                <div className={s.govPanelItem}>
+                  <span className={s.govCircleIcon} aria-hidden="true">
+                    <LinkChainIcon />
+                  </span>
+                  <div className={s.govPanelCopy}>
+                    <strong>
+                      {t.verifyDomainBefore}
+                      <span className={s.govHighlight}>{t.verifyDomainHighlight}</span>
+                      {t.verifyDomainAfter}
+                    </strong>
+                    <p>{t.verifyDomainDesc}</p>
+                  </div>
+                </div>
+                <div className={s.govPanelItem}>
+                  <span className={s.govCircleIcon} aria-hidden="true">
+                    <LockIcon />
+                  </span>
+                  <div className={s.govPanelCopy}>
+                    <strong>
+                      {t.verifyHttpsBefore}
+                      <span className={s.govHighlight}>{t.verifyHttpsHighlight}</span>
+                      {t.verifyHttpsAfter}
+                    </strong>
+                    <p>{t.verifyHttpsDesc}</p>
+                  </div>
+                </div>
               </div>
-              <div className={s.govPanelItem}>
-                <strong>{t.verifyHttpsTitle}</strong>
-                <p>{t.verifyHttpsDesc}</p>
+              <div className={s.govDgaCard}>
+                <DgaEmblemIcon />
+                <span>{t.dgaRegisteredLabel}</span>
+                <a
+                  className={s.govDgaLink}
+                  href={links.dga_license_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  dir="ltr"
+                >
+                  {links.dga_license_number}
+                </a>
               </div>
             </div>
           </details>
@@ -269,6 +312,39 @@ function ChevronDownIcon() {
   return (
     <svg className={s.govChevron} viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <path d="m5 7.5 5 5 5-5" />
+    </svg>
+  );
+}
+
+function LinkChainIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M10 13a5 5 0 0 0 7.07 0l2.12-2.12a5 5 0 0 0-7.07-7.07L10.5 5.43" />
+      <path d="M14 11a5 5 0 0 0-7.07 0L4.8 13.12a5 5 0 1 0 7.07 7.07l1.62-1.62" />
+    </svg>
+  );
+}
+
+function LockIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect x="5" y="11" width="14" height="10" rx="2" />
+      <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+      <circle cx="12" cy="16" r="1" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+/** Digital Government Authority (DGA) mark shown next to the registration number. */
+function DgaEmblemIcon() {
+  return (
+    <svg className={s.govDgaIcon} viewBox="0 0 28 28" fill="none" aria-hidden="true">
+      <path d="M14 4v12" stroke="#0097a7" strokeWidth="1.6" strokeLinecap="round" />
+      <path d="M14 6.5c-2.5 0-4.2 1.2-5 3" stroke="#0097a7" strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M14 6.5c2.5 0 4.2 1.2 5 3" stroke="#0097a7" strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M14 10c-2.8 0-4.8 1.3-5.8 3.2" stroke="#00acc1" strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M14 10c2.8 0 4.8 1.3 5.8 3.2" stroke="#00acc1" strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M8.5 23 19.5 17.5M19.5 23 8.5 17.5" stroke="#5e4b8b" strokeWidth="1.7" strokeLinecap="round" />
     </svg>
   );
 }
