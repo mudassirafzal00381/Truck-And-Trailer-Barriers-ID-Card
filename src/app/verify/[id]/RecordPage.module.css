@@ -21,6 +21,108 @@
   font-family: var(--font-record), var(--font-arabic), system-ui, sans-serif;
 }
 
+/* ---------- official government banner ---------- */
+
+.govBanner {
+  background: #f3f4f6;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.85rem;
+  color: #374151;
+}
+
+.govBannerInner {
+  max-width: 1880px;
+  margin: 0 auto;
+  padding: 0.45rem 1.75rem;
+}
+
+.govDetails {
+  width: 100%;
+}
+
+.govSummary {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  cursor: pointer;
+  list-style: none;
+  line-height: 1.4;
+}
+
+.govSummary::-webkit-details-marker {
+  display: none;
+}
+
+.govEmblem {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 22px;
+  height: 22px;
+  margin-top: 0.05rem;
+  border-radius: 4px;
+  background: #006c35;
+  color: #fff;
+}
+
+.govEmblem svg {
+  width: 15px;
+  height: 15px;
+}
+
+.govText {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 0.55rem;
+  row-gap: 0.15rem;
+}
+
+.govVerifyToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--saso-green);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.govSummary:hover .govVerifyToggle {
+  text-decoration: underline;
+}
+
+.govChevron {
+  width: 15px;
+  height: 15px;
+  transition: transform 0.15s;
+}
+
+.govDetails[open] .govChevron {
+  transform: rotate(180deg);
+}
+
+.govPanel {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 2rem;
+  margin-top: 0.75rem;
+  padding: 0.85rem 0 0.35rem;
+  border-top: 1px solid var(--line);
+}
+
+.govPanelItem strong {
+  display: block;
+  margin-bottom: 0.2rem;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.govPanelItem p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
 /* ---------- header ---------- */
 
 .header {
@@ -45,37 +147,71 @@
   min-width: 0;
 }
 
-.headerNav {
-  display: flex;
-  align-items: center;
-  gap: 1.75rem;
-  margin-inline-start: 1.5rem;
-  margin-inline-end: auto;
+.menuWrap {
+  position: relative;
+  display: inline-flex;
+  flex: none;
 }
 
-.navLink {
+.menuButton {
+  display: inline-grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--saso-green);
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.menuButton:hover {
+  background: #f3f4f6;
+}
+
+.menuButton:focus-visible {
+  outline: 2px solid var(--saso-green);
+  outline-offset: 2px;
+}
+
+.menuButton svg {
+  width: 26px;
+  height: 26px;
+}
+
+.menuDropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  inset-inline-start: 0;
+  z-index: 40;
+  min-width: 210px;
+  padding: 0.4rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.14);
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.menuItem {
+  display: block;
+  padding: 0.6rem 0.85rem;
+  border-radius: 7px;
   color: #1c2833;
-  font-size: 1.05rem;
+  font-size: 0.98rem;
   font-weight: 500;
   text-decoration: none;
   white-space: nowrap;
-  transition: color 0.15s;
+  transition: background-color 0.15s, color 0.15s;
 }
 
-.navLink:hover {
+.menuItem:hover {
+  background: #f0fdf4;
   color: var(--saso-green);
-  text-decoration: underline;
-}
-
-.menuIcon {
-  display: inline-flex;
-  flex: none;
-  color: var(--saso-green);
-}
-
-.menuIcon svg {
-  width: 26px;
-  height: 26px;
 }
 
 /* Saudi Standards (SASO) logo — COMPANY.logo_path. */
@@ -466,38 +602,34 @@ a.socialButton:hover {
 
 /* ---------- smaller screens ---------- */
 
-@media (max-width: 960px) {
-  .headerInner {
-    flex-wrap: wrap;
-    row-gap: 0.65rem;
-  }
-  .headerNav {
-    order: 3;
-    flex-basis: 100%;
-    margin: 0;
-    padding-top: 0.65rem;
-    border-top: 1px solid var(--line);
-    gap: 1.25rem;
-  }
-  .navLink {
-    font-size: 0.95rem;
-  }
-}
-
 @media (max-width: 760px) {
+  .govPanel {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+  }
   .summaryGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 560px) {
+  .govBanner {
+    font-size: 0.8rem;
+  }
+  .govBannerInner {
+    padding: 0.45rem 1rem;
+  }
   .headerInner {
     padding: 0.7rem 1rem;
   }
   .brand {
     gap: 0.7rem;
   }
-  .menuIcon svg {
+  .menuButton {
+    width: 34px;
+    height: 34px;
+  }
+  .menuButton svg {
     width: 22px;
     height: 22px;
   }

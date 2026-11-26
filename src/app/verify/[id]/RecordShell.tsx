@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element -- small fixed logo; no need for next/image here */
 import { COMPANY } from "@/config/company";
+import { HeaderMenu } from "./HeaderMenu";
 import s from "./RecordPage.module.css";
 
 export type RecordLang = "ar" | "en";
@@ -52,8 +53,15 @@ export const RECORD_TEXT = {
     copyrightPrefix: "جميع الحقوق محفوظة 2026.",
     copyrightBrand: "المواصفات السعودية.",
     switchLabel: "English",
+    menuLabel: "القائمة",
     home: "الرئيسية",
     loginAsAse: "تسجيل الدخول كجهة دراسة معتمدة",
+    govBanner: "موقع حكومي رسمي لحكومة المملكة العربية السعودية",
+    howToVerify: "كيف تتحقق",
+    verifyDomainTitle: "روابط المواقع الرسمية تنتهي بـ .gov.sa",
+    verifyDomainDesc: "جميع المواقع الحكومية الرسمية في المملكة العربية السعودية تنتهي بالنطاق .gov.sa.",
+    verifyHttpsTitle: "المواقع الحكومية آمنة ومشفّرة (HTTPS)",
+    verifyHttpsDesc: "وجود رمز القفل أو https:// يعني أن اتصالك بالموقع آمن ومشفّر.",
     beta: "تجريبي",
     login: "تسجيل الدخول / التسجيل",
   },
@@ -95,8 +103,15 @@ export const RECORD_TEXT = {
     copyrightPrefix: "Copyright 2026.",
     copyrightBrand: "SASO Standards.",
     switchLabel: "عربي",
+    menuLabel: "Menu",
     home: "Home",
     loginAsAse: "Login as ASE",
+    govBanner: "Official government website of the Government of the Kingdom of Saudi Arabia",
+    howToVerify: "How to verify",
+    verifyDomainTitle: "Official websites use .gov.sa",
+    verifyDomainDesc: "Official websites of the Government of the Kingdom of Saudi Arabia end in .gov.sa.",
+    verifyHttpsTitle: "Official websites use HTTPS",
+    verifyHttpsDesc: "A lock icon or https:// means your connection to the website is secure and encrypted.",
     beta: "Beta",
     login: "Login / Register",
   },
@@ -109,23 +124,48 @@ export function RecordShell({ lang, children }: { lang: RecordLang; children: Re
 
   return (
     <div className={s.page} dir={lang === "ar" ? "rtl" : "ltr"} lang={lang}>
+      <div className={s.govBanner}>
+        <div className={s.govBannerInner}>
+          <details className={s.govDetails}>
+            <summary className={s.govSummary}>
+              <span className={s.govEmblem} aria-hidden="true">
+                <SaudiEmblemIcon />
+              </span>
+              <span className={s.govText}>
+                <span>{t.govBanner}</span>
+                <span className={s.govVerifyToggle}>
+                  {t.howToVerify}
+                  <ChevronDownIcon />
+                </span>
+              </span>
+            </summary>
+            <div className={s.govPanel}>
+              <div className={s.govPanelItem}>
+                <strong>{t.verifyDomainTitle}</strong>
+                <p>{t.verifyDomainDesc}</p>
+              </div>
+              <div className={s.govPanelItem}>
+                <strong>{t.verifyHttpsTitle}</strong>
+                <p>{t.verifyHttpsDesc}</p>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
+
       <header className={s.header}>
         <div className={s.headerInner}>
           <div className={s.brand}>
-            <span className={s.menuIcon} aria-hidden="true">
-              <MenuIcon />
-            </span>
+            <HeaderMenu
+              menuLabel={t.menuLabel}
+              homeLabel={t.home}
+              homeUrl={links.home_url}
+              aseLoginLabel={t.loginAsAse}
+              aseLoginUrl={links.ase_login_url}
+            />
             <img className={s.logo} src={COMPANY.logo_path} alt="Saudi Standards — SASO" />
           </div>
-          <nav className={s.headerNav}>
-            <a className={s.navLink} href={links.home_url} target="_blank" rel="noopener noreferrer">
-              {t.home}
-            </a>
-            <a className={s.navLink} href={links.ase_login_url} target="_blank" rel="noopener noreferrer">
-              {t.loginAsAse}
-            </a>
-          </nav>
-          <div className={s.headerActions}>
+          <nav className={s.headerActions}>
             <span className={s.beta}>{t.beta}</span>
             <a className={s.headerLink} href={`?lang=${lang === "ar" ? "en" : "ar"}`} lang={lang === "ar" ? "en" : "ar"}>
               <TranslateIcon />
@@ -135,7 +175,7 @@ export function RecordShell({ lang, children }: { lang: RecordLang; children: Re
               <UserIcon />
               <span className={s.headerLinkText}>{t.login}</span>
             </a>
-          </div>
+          </nav>
         </div>
       </header>
 
@@ -214,10 +254,21 @@ export function Item({ label, children, ltr }: { label: string; children: React.
 
 const iconProps = { viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.8, "aria-hidden": true } as const;
 
-function MenuIcon() {
+function SaudiEmblemIcon() {
   return (
-    <svg {...iconProps}>
-      <path d="M4 6h16M4 12h16M4 18h16" />
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M12 5v8" />
+      <path d="M12 7c-2-1.8-4.5-1.8-6 0M12 7c2-1.8 4.5-1.8 6 0" />
+      <path d="M12 9.5c-1.8-1-3.8-.8-5 .8M12 9.5c1.8-1 3.8-.8 5 .8" />
+      <path d="M6.5 18.5 17.5 13M17.5 18.5 6.5 13" />
+    </svg>
+  );
+}
+
+function ChevronDownIcon() {
+  return (
+    <svg className={s.govChevron} viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="m5 7.5 5 5 5-5" />
     </svg>
   );
 }
