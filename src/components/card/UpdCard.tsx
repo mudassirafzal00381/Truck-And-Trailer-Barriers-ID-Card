@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element -- plain <img> elements keep the logos exportable to PDF */
 import { CARD_TEXT, DEFAULT_TECHNICAL_REFERENCES, DEFAULT_TECHNICAL_REFERENCES_PRINTED } from "@/config/card-template";
-import { COMPANY } from "@/config/company";
+import { COMPANY, type CardSmallLogoKey } from "@/config/company";
 import { formatDisplayDate, type UpdCard as UpdCardRecord } from "@/lib/cards";
 import s from "./UpdCard.module.css";
 
@@ -34,6 +34,8 @@ type Props = {
   card: UpdCardData;
   /** Inline SVG markup of the QR code (generated server-side from the verification URL). */
   qrSvg: string;
+  /** Which small logo to print in the slot above the VIN box (defaults to the SASO mark). */
+  smallLogo?: CardSmallLogoKey;
   ref?: React.Ref<HTMLDivElement>;
 };
 
@@ -77,7 +79,7 @@ function updTypeLines(updType: string): string[] {
   return updType.split("/").map((letter) => CARD_TEXT.upd_types[letter] ?? letter);
 }
 
-export function UpdCard({ card, qrSvg, ref }: Props) {
+export function UpdCard({ card, qrSvg, smallLogo = "saso", ref }: Props) {
   const vin = card.vehicle_chassis_number.split("");
   const vinBoxes = Math.max(VIN_BOXES, vin.length);
   const technicalReferences =
@@ -128,7 +130,11 @@ export function UpdCard({ card, qrSvg, ref }: Props) {
           {CARD_TEXT.issuedBy_ar(COMPANY.name_ar)}
         </p>
       </div>
-      <img className={s.smallLogo} src={COMPANY.logo_mark_path} alt="SASO" />
+      <img
+        className={s.smallLogo}
+        src={COMPANY.card_small_logos[smallLogo]}
+        alt={smallLogo === "saso" ? "SASO" : COMPANY.name_en}
+      />
       <img className={s.watermark} src={COMPANY.logo_mark_path} alt="" aria-hidden />
 
       {/* ---------- VIN, one character per box ---------- */}

@@ -116,7 +116,10 @@
   "preview": {
     "title": "Card preview",
     "created": "Card created and saved",
-    "verifyLink": "Verification link (encoded in the QR code)"
+    "verifyLink": "Verification link (encoded in the QR code)",
+    "pdfLogo": "PDF card logo",
+    "logoOld": "SASO logo (Old)",
+    "logoNew": "Workshop logo (New)"
   },
   "auth": {
     "loginTitle": "Admin sign-in",

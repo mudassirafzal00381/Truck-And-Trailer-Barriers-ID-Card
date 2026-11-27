@@ -4,27 +4,29 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { CardLogoPicker } from "@/components/card/CardLogoPicker";
 import { CardScaler } from "@/components/card/CardScaler";
 import { PageTitle } from "@/components/PageTitle";
 import { Spinner } from "@/components/Spinner";
 import { Toast } from "@/components/Toast";
 import { UpdCard } from "@/components/card/UpdCard";
 import { useLanguage, type TranslationKey } from "@/i18n/LanguageProvider";
-import { FEATURES } from "@/config/company";
+import { FEATURES, type CardSmallLogoKey } from "@/config/company";
 import { barrierPhoto, photoKindsFor } from "@/lib/barrier-photos";
 import { PHOTO_LABEL_KEYS } from "@/components/form/BarrierPhotoPicker";
 import { copyText, downloadCardPdf } from "@/lib/card-pdf";
 import type { UpdCard as UpdCardRecord } from "@/lib/cards";
 
-type Props = { card: UpdCardRecord; qrSvg: string; justCreated: boolean };
+type Props = { card: UpdCardRecord; qrSvg: string; justCreated: boolean; initialLogo: CardSmallLogoKey };
 
 const buttonClass =
   "inline-flex items-center gap-2 rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:border-brand hover:text-brand disabled:opacity-60";
 
 /** Page chrome uses the Arabic/Urdu UI language; the card itself stays fixed bilingual. */
-export function CardPreview({ card, qrSvg, justCreated }: Props) {
+export function CardPreview({ card, qrSvg, justCreated, initialLogo }: Props) {
   const { t } = useLanguage();
   const cardRef = useRef<HTMLDivElement>(null);
+  const [smallLogo, setSmallLogo] = useState<CardSmallLogoKey>(initialLogo);
   const [status, setStatus] = useState<{ key: TranslationKey; error?: boolean } | null>(null);
   const [toast, setToast] = useState<{ key: TranslationKey; error?: boolean } | null>(
     justCreated ? { key: "preview.created" } : null,
@@ -100,6 +102,10 @@ export function CardPreview({ card, qrSvg, justCreated }: Props) {
           </div>
         </div>
 
+        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+          <CardLogoPicker value={smallLogo} onChange={setSmallLogo} />
+        </div>
+
         <div className="flex flex-wrap items-center gap-2">
           <button type="button" onClick={onDownload} disabled={pdfBusy} className={`${buttonClass} border-brand! bg-brand! text-white!`}>
             {pdfBusy && <Spinner />}
@@ -143,7 +149,7 @@ export function CardPreview({ card, qrSvg, justCreated }: Props) {
       </div>
 
       <CardScaler>
-        <UpdCard ref={cardRef} card={card} qrSvg={qrSvg} />
+        <UpdCard ref={cardRef} card={card} qrSvg={qrSvg} smallLogo={smallLogo} />
       </CardScaler>
     </main>
   );

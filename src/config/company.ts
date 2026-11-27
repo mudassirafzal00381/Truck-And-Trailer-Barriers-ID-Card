@@ -13,6 +13,11 @@ export const COMPANY = {
   logo_path: "/logo.png",
   // Square version (the SASO triangle mark only), used as the browser tab icon and card watermark.
   logo_mark_path: "/logo-mark.png",
+  // Selectable small logos printed above the VIN box on the PDF/printed card.
+  card_small_logos: {
+    saso: "/logo-mark.png",
+    workshop: "/card-logo-alt.png",
+  },
   // The client's own logo, shown on the public record page.
   // ⚠ Currently the gear logo from the client's reference PDF — replace if it isn't theirs.
   card_logo_path: "/manufacturer-logo.png",
@@ -64,3 +69,8 @@ export const FEATURES = {
 } as const;
 
 export type CompanyConfig = typeof COMPANY;
+export type CardSmallLogoKey = keyof typeof COMPANY.card_small_logos;
+
+export function parseCardSmallLogo(value: unknown): CardSmallLogoKey {
+  return value === "workshop" ? "workshop" : "saso";
+}

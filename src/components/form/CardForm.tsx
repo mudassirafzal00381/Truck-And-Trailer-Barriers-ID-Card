@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { DEFAULT_TECHNICAL_REFERENCES } from "@/config/card-template";
-import { COMPANY, FEATURES } from "@/config/company";
+import { COMPANY, FEATURES, type CardSmallLogoKey } from "@/config/company";
+import { CardLogoPicker } from "@/components/card/CardLogoPicker";
 import { ERROR_MESSAGE_KEYS } from "@/i18n/errors";
 import { useLanguage, type TranslationKey } from "@/i18n/LanguageProvider";
 import {
@@ -66,6 +67,7 @@ export function CardForm() {
   const [sessionExpired, setSessionExpired] = useState(false);
   const [photos, setPhotos] = useState<Record<PhotoKind, File | null>>(NO_PHOTOS);
   const [photoErrors, setPhotoErrors] = useState<Partial<Record<PhotoKind, CardErrorCode>>>({});
+  const [smallLogo, setSmallLogo] = useState<CardSmallLogoKey>("saso");
 
   const updType = buildUpdType(sides);
   // One picture field per selected barrier (FEATURES.barrierPhotos switches them off).
@@ -95,6 +97,7 @@ export function CardForm() {
     setSerial(emptySerial());
     setPhotos(NO_PHOTOS);
     setPhotoErrors({});
+    setSmallLogo("saso");
     setServerErrors({});
     setShowErrors(false);
     setFormMessage(null);
@@ -137,7 +140,8 @@ export function CardForm() {
     const photoField = body.field?.endsWith("_photo") ? (body.field.replace("_photo", "") as PhotoKind) : null;
 
     if (res.ok && body.card) {
-      router.push(`/cards/${body.card.id}/preview?created=1`); // spinner stays until the preview renders
+      const logoQuery = smallLogo === "saso" ? "" : `&logo=${smallLogo}`;
+      router.push(`/cards/${body.card.id}/preview?created=1${logoQuery}`); // spinner stays until the preview renders
       return;
     }
     if (res.status === 401) {
@@ -281,6 +285,9 @@ export function CardForm() {
         <Field id="card_issue_date" label={t("form.cardIssueDate")} error={errorText(errors.card_issue_date)}>
           <input id="card_issue_date" type="date" required value={values.card_issue_date} onChange={set("card_issue_date")} className={inputClass(!!errors.card_issue_date)} />
         </Field>
+        <div className="sm:col-span-2">
+          <CardLogoPicker value={smallLogo} onChange={setSmallLogo} />
+        </div>
       </Section>
 
       <div className="flex flex-wrap items-center gap-3">

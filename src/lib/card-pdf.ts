@@ -14,6 +14,7 @@ export async function downloadCardPdf(cardEl: HTMLElement, card: { card_number: 
   const title = `UPD Card ${card.under_run_number_full}`;
   const [{ toPng }, { jsPDF }] = await Promise.all([import("html-to-image"), import("jspdf")]);
   await document.fonts.ready;
+  await waitForImages(cardEl);
 
   // ~290 dpi: sharp text and an easily scannable QR code.
   const png = await toPng(cardEl, {
@@ -41,6 +42,21 @@ export async function downloadCardPdf(cardEl: HTMLElement, card: { card_number: 
   }
 
   pdf.save(fileName);
+}
+
+/** Ensures every <img> inside the card (e.g. a newly selected logo) is loaded before rasterizing. */
+async function waitForImages(root: HTMLElement): Promise<void> {
+  const images = [...root.querySelectorAll("img")];
+  await Promise.all(
+    images.map((img) => {
+      if (img.complete) return img.decode?.().catch(() => undefined);
+      return new Promise<void>((resolve) => {
+        const done = () => resolve();
+        img.addEventListener("load", done, { once: true });
+        img.addEventListener("error", done, { once: true });
+      });
+    }),
+  );
 }
 
 /**

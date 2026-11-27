@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
+import { CardLogoPicker } from "@/components/card/CardLogoPicker";
 import { UpdCard } from "@/components/card/UpdCard";
 import { PageTitle } from "@/components/PageTitle";
+import type { CardSmallLogoKey } from "@/config/company";
 import { useLanguage } from "@/i18n/LanguageProvider";
 import { copyText, downloadCardPdf } from "@/lib/card-pdf";
 import { formatCardDate, type PublicCard } from "@/lib/cards";
@@ -21,6 +23,7 @@ export function CardsTable({ cards }: { cards: PublicCard[] }) {
   const deferredQuery = useDeferredValue(query);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [exporting, setExporting] = useState<{ card: PublicCard; qrSvg: string } | null>(null);
+  const [smallLogo, setSmallLogo] = useState<CardSmallLogoKey>("saso");
   const [pdfError, setPdfError] = useState(false);
   const exportRef = useRef<HTMLDivElement>(null);
 
@@ -85,6 +88,9 @@ export function CardsTable({ cards }: { cards: PublicCard[] }) {
           className="w-full max-w-md rounded-md border border-slate-300 bg-white px-3 py-2 outline-none focus:border-brand focus:ring-2 focus:ring-brand/30"
         />
         <span className="text-sm text-slate-500">{countText}</span>
+        <div className="ms-auto">
+          <CardLogoPicker value={smallLogo} onChange={setSmallLogo} compact />
+        </div>
         {pdfError && (
           <span role="alert" className="text-sm text-red-600">
             {t("messages.pdfFailed")}
@@ -172,7 +178,7 @@ export function CardsTable({ cards }: { cards: PublicCard[] }) {
       {/* Off-screen render target for "Download PDF" from the list */}
       {exporting && (
         <div aria-hidden className="pointer-events-none fixed top-0 -left-[10000px]" dir="ltr">
-          <UpdCard ref={exportRef} card={exporting.card} qrSvg={exporting.qrSvg} />
+          <UpdCard ref={exportRef} card={exporting.card} qrSvg={exporting.qrSvg} smallLogo={smallLogo} />
         </div>
       )}
     </main>

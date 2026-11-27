@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { parseCardSmallLogo } from "@/config/company";
 import { requireAdminPage } from "@/lib/auth";
 import { getCardStore } from "@/lib/card-store";
 import { CARD_ID_PATTERN } from "@/lib/cards";
@@ -12,11 +13,18 @@ export const metadata: Metadata = { robots: { index: false, follow: false } };
 export default async function CardPreviewPage({ params, searchParams }: PageProps<"/cards/[id]/preview">) {
   const { id } = await params;
   await requireAdminPage(`/cards/${id}/preview`);
-  const { created } = await searchParams;
+  const { created, logo } = await searchParams;
   if (!CARD_ID_PATTERN.test(id)) notFound();
 
   const card = await getCardStore().getById(id);
   if (!card) notFound();
 
-  return <CardPreview card={card} qrSvg={await qrSvgFor(card.qr_url)} justCreated={created === "1"} />;
+  return (
+    <CardPreview
+      card={card}
+      qrSvg={await qrSvgFor(card.qr_url)}
+      justCreated={created === "1"}
+      initialLogo={parseCardSmallLogo(logo)}
+    />
+  );
 }
